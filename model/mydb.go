@@ -6,7 +6,6 @@ import (
 	"time"
 
 	// Mysql的Driver
-
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -24,15 +23,15 @@ type MyDB struct {
 }
 
 /*New 產生一個DB實例*/
-func New() (MyDB, error) {
+func New() (*MyDB, error) {
 	user := "dbuser"         // 帳號
 	password := "Ej3yj/ru8@" // 密碼
 	dbName := "UserDB"       // db名稱
 
 	// 連接本地的MySQL資料庫
 	db, err := connectMysql(user, password, dbName)
-	
-	return MyDB{db: db}, err
+
+	return &MyDB{db: db}, err
 }
 
 // Close 關閉MyDB內部的*sql.db實例
@@ -46,7 +45,14 @@ func connectMysql(userName, userPassword, dbName string) (*sql.DB, error) {
 
 	return sql.Open("mysql", dataSourceName)
 }
-
+func (myDB MyDB) GetUserID(username, password string) (userID int, ok bool) {
+	db := myDB.db
+	row := db.QueryRow("SELECT userID from User WHERE name = ? and  password=?", username, password)
+	if err := row.Scan(&userID); err != nil {
+		return userID, false
+	}
+	return userID, true
+}
 func (myDB MyDB) GetAllArticle() ([]Article, error) {
 	db := myDB.db
 	var results []Article
