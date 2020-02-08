@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -17,7 +18,8 @@ type Env struct {
 }
 
 const (
-	USER_KEY = "user"
+	USER_KEY      = "user"
+	USER_NAME_KEY = "user_name"
 )
 
 func main() {
@@ -50,13 +52,11 @@ func engine() *gin.Engine {
 	// 登入請求
 	r.POST("login", env.login)
 
-	// 驗證使用者的路由
-	authGroup := r.Group("/auth")
 	// 登入驗證的中介層(以是否存在session辨識使用者是否已登入)
-	authGroup.Use(AuthRequired)
+	r.Use(AuthRequired)
 
 	// 文章列表頁面
-	authGroup.GET("/list", env.articleList)
+	r.GET("list", env.articleList)
 	return r
 }
 
@@ -68,14 +68,24 @@ func (e *Env) login(c *gin.Context) {
 	if ok {
 		// 成功登入
 		session.Set("user", userID)
-		session.Options(sessions.Options{HttpOnly: true, MaxAge: 3600 * 1})
+		expire := 3600 * 8
+		session.Options(sessions.Options{HttpOnly: true, MaxAge: expire})
 		if err := session.Save(); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"Fail": "Your session can't save",
 			})
 			return
 		}
-		c.Redirect(http.StatusPermanentRedirect, "/auth/list")
+		cookie := http.Cookie{
+			Name:    USER_NAME_KEY,
+			Value:   username,
+			Expires: time.Now().AddDate(0, 0, 1),
+		}
+		http.SetCookie(c.Writer, &cookie)
+
+		c.Redirect(http.StatusFound, "list")
+		// http.Redirect(c.Writer, c.Request, "list", http.StatusFound)
+		c.Abort()
 		return
 	}
 	// 登入失敗
@@ -83,14 +93,17 @@ func (e *Env) login(c *gin.Context) {
 		"Login": "Fail",
 	})
 }
-
 func (e *Env) index(c *gin.Context) {
 	c.HTML(200, "login.html", nil)
 }
+
 func (e *Env) articleList(c *gin.Context) {
 	session := sessions.Default(c)
 	userID := session.Get(USER_KEY)
-
+	username, err := c.Cookie(USER_NAME_KEY)
+	if err != nil {
+		username = "Undefined User"
+	}
 	articles, err := e.GetAllArticles()
 	if err != nil {
 		c.JSON(http.StatusExpectationFailed,
@@ -99,8 +112,10 @@ func (e *Env) articleList(c *gin.Context) {
 			})
 		return
 	}
-
-	c.JSON(200, gin.H{"恭喜獲得文章列表": articles})
+	c.HTML(200, "articleList.html", gin.H{
+		"username": username,
+		"articles": articles,
+	})
 }
 
 // AuthRequired 驗證使用者登入的中介層(採用Cookie Session)
@@ -111,6 +126,7 @@ func AuthRequired(c *gin.Context) {
 	if user == nil {
 		// Abort the request with the appropriate error code
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+
 		return
 	}
 	// 有登入過的Session紀錄，繼續執行
