@@ -54,6 +54,8 @@ func engine() *gin.Engine {
 
 	// 登入驗證的中介層(以是否存在session辨識使用者是否已登入)
 	r.Use(AuthRequired)
+	// 登出
+	r.GET("logout", env.logout)
 
 	// 文章列表頁面
 	r.GET("list", env.articleList)
@@ -92,6 +94,13 @@ func (e *Env) login(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"Login": "Fail",
 	})
+}
+func (e *Env) logout(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Delete(USER_KEY)
+	session.Save()
+	c.Redirect(http.StatusFound, "/")
+	c.Abort()
 }
 func (e *Env) index(c *gin.Context) {
 	c.HTML(200, "login.html", nil)
