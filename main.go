@@ -35,23 +35,27 @@ func engine() *gin.Engine {
 	if err != nil {
 		log.Fatal("mydb's error:", err)
 	}
-
 	env := &Env{mydb}
 
 	r := gin.New()
 	r.LoadHTMLGlob("template/*")
 
+	// 使用紀錄CookieSession的中介層
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("mysession", store))
 
-	// 起始頁面(含登入頁面)
+	/* 無需驗證的路由 */
+	// 起始頁面(即登入頁面)
 	r.GET("/", env.index)
 	// 登入請求
 	r.POST("login", env.login)
 
-	// 列表介面
+	// 驗證使用者的路由
 	authGroup := r.Group("/auth")
+	// 登入驗證的中介層(以是否存在session辨識使用者是否已登入)
 	authGroup.Use(AuthRequired)
+
+	// 文章列表頁面
 	authGroup.GET("/list", env.articleList)
 	return r
 }
@@ -64,6 +68,7 @@ func (e *Env) login(c *gin.Context) {
 	if ok {
 		// 成功登入
 		session.Set("user", userID)
+		session.Options(sessions.Options{HttpOnly: true, MaxAge: 3600 * 1})
 		if err := session.Save(); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"Fail": "Your session can't save",
@@ -85,7 +90,17 @@ func (e *Env) index(c *gin.Context) {
 func (e *Env) articleList(c *gin.Context) {
 	session := sessions.Default(c)
 	userID := session.Get(USER_KEY)
-	c.JSON(200, gin.H{"恭喜": fmt.Sprintf("成功登入:%d", userID)})
+
+	articles, err := e.GetAllArticles()
+	if err != nil {
+		c.JSON(http.StatusExpectationFailed,
+			gin.H{
+				"error": fmt.Sprintf("User %d, you can't get all articles because %s", userID, err),
+			})
+		return
+	}
+
+	c.JSON(200, gin.H{"恭喜獲得文章列表": articles})
 }
 
 // AuthRequired 驗證使用者登入的中介層(採用Cookie Session)

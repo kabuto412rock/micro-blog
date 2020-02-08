@@ -41,11 +41,12 @@ func (mydb MyDB) Close() error {
 
 // 連接到本地端名為dbName的資料庫
 func connectMysql(userName, userPassword, dbName string) (*sql.DB, error) {
-	dataSourceName := fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/%s", userName, userPassword, dbName)
+	dataSourceName := fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/%s?parseTime=true", userName, userPassword, dbName)
 
 	return sql.Open("mysql", dataSourceName)
 }
 func (db MyDB) GetUserID(username, password string) (userID int, ok bool) {
+
 	row := db.QueryRow("SELECT userID from User WHERE name = ? and  password=?", username, password)
 	if err := row.Scan(&userID); err != nil {
 		return userID, false
@@ -53,9 +54,9 @@ func (db MyDB) GetUserID(username, password string) (userID int, ok bool) {
 	return userID, true
 }
 
-func (db MyDB) GetAllArticle() ([]Article, error) {
+func (db MyDB) GetAllArticles() ([]Article, error) {
 	var results []Article
-	rows, err := db.Query("SELECT articleID, userID, title, content, editTime FROM Article", nil)
+	rows, err := db.Query("SELECT articleID, userID, title, content, editTime FROM Article")
 	if err != nil {
 		return nil, err
 	}
@@ -63,6 +64,7 @@ func (db MyDB) GetAllArticle() ([]Article, error) {
 		return nil, err
 	}
 	var result Article
+
 	for rows.Next() {
 		rows.Scan(&result.ArticleID, &result.UserID, &result.Title, &result.Content, &result.EditTime)
 		results = append(results, result)
