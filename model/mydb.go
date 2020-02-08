@@ -19,7 +19,7 @@ type Article struct {
 	EditTime  time.Time
 }
 type MyDB struct {
-	db *sql.DB
+	*sql.DB
 }
 
 /*New 產生一個DB實例*/
@@ -31,12 +31,12 @@ func New() (*MyDB, error) {
 	// 連接本地的MySQL資料庫
 	db, err := connectMysql(user, password, dbName)
 
-	return &MyDB{db: db}, err
+	return &MyDB{db}, err
 }
 
 // Close 關閉MyDB內部的*sql.db實例
 func (mydb MyDB) Close() error {
-	return mydb.db.Close()
+	return mydb.Close()
 }
 
 // 連接到本地端名為dbName的資料庫
@@ -45,16 +45,15 @@ func connectMysql(userName, userPassword, dbName string) (*sql.DB, error) {
 
 	return sql.Open("mysql", dataSourceName)
 }
-func (myDB MyDB) GetUserID(username, password string) (userID int, ok bool) {
-	db := myDB.db
+func (db MyDB) GetUserID(username, password string) (userID int, ok bool) {
 	row := db.QueryRow("SELECT userID from User WHERE name = ? and  password=?", username, password)
 	if err := row.Scan(&userID); err != nil {
 		return userID, false
 	}
 	return userID, true
 }
-func (myDB MyDB) GetAllArticle() ([]Article, error) {
-	db := myDB.db
+
+func (db MyDB) GetAllArticle() ([]Article, error) {
 	var results []Article
 	rows, err := db.Query("SELECT articleID, userID, title, content, editTime FROM Article", nil)
 	if err != nil {
@@ -66,7 +65,6 @@ func (myDB MyDB) GetAllArticle() ([]Article, error) {
 	var result Article
 	for rows.Next() {
 		rows.Scan(&result.ArticleID, &result.UserID, &result.Title, &result.Content, &result.EditTime)
-		fmt.Println("我進來rows.Next啦")
 		results = append(results, result)
 	}
 	return results, nil

@@ -13,7 +13,7 @@ import (
 )
 
 type Env struct {
-	mydb *model.MyDB
+	*model.MyDB
 }
 
 const (
@@ -60,7 +60,7 @@ func (e *Env) login(c *gin.Context) {
 	username := c.PostForm("username")
 	password := c.PostForm("password")
 	session := sessions.Default(c)
-	userID, ok := e.mydb.GetUserID(username, password)
+	userID, ok := e.GetUserID(username, password)
 	if ok {
 		// 成功登入
 		session.Set("user", userID)
