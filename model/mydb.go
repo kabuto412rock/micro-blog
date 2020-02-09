@@ -45,29 +45,4 @@ func connectMysql(userName, userPassword, dbName string) (*sql.DB, error) {
 
 	return sql.Open("mysql", dataSourceName)
 }
-func (db MyDB) GetUserID(username, password string) (userID int, ok bool) {
 
-	row := db.QueryRow("SELECT userID from User WHERE name = ? and  password=?", username, password)
-	if err := row.Scan(&userID); err != nil {
-		return userID, false
-	}
-	return userID, true
-}
-
-func (db MyDB) GetAllArticles() ([]Article, error) {
-	var results []Article
-	rows, err := db.Query("SELECT articleID, userID, title, content, editTime FROM Article")
-	if err != nil {
-		return nil, err
-	}
-	if rows == nil {
-		return nil, err
-	}
-	var result Article
-
-	for rows.Next() {
-		rows.Scan(&result.ArticleID, &result.UserID, &result.Title, &result.Content, &result.EditTime)
-		results = append(results, result)
-	}
-	return results, nil
-}

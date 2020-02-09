@@ -3,19 +3,21 @@
 <!-- Embed the head.html here -->
 {{ template "header.html" .}}
 <!-- Content Start -->
+<div class="pure-group">
 
-<h1>歡迎回來使用者"{{.username}}"</h1>
+    <h1>歡迎回來使用者"{{.username}}"</h1>
 
-<form action="/logout" method="GET">
-    <input type="submit" value="登出">
-</form>
+    <form action="/logout" method="GET">
+        <input type="submit" value="登出">
+    </form>
+</div>
 <ol>
     {{range .articles}}                 
-    <li><h3>標題:{{.Title}}</h3>
-        <h3>時間:{{.EditTime}}</h3>
-        <textarea name="" id="" cols="30" rows="10">
+    <li><div>標題:{{.Title}}</div>
+        <div>時間:{{.EditTime}}</div>
+        <p class="pure.pure-form-stacked">
             {{.Content}}
-        </textarea>
+        </p>
         <!-- 改用RESTful風格撰寫API -->
         {{if eq .UserID 1}}
         <a href="edit?articleID={{.ArticleID}}">編輯</a>
