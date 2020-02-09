@@ -125,11 +125,11 @@ func (e *Env) articleList(c *gin.Context) {
 	if err != nil {
 		username = "Undefined User"
 	}
-	articles, err := e.GetAllArticles()
-	if err != nil {
+	articles, ok := e.GetArticlesByPage(2, 10)
+	if !ok {
 		c.JSON(http.StatusExpectationFailed,
 			gin.H{
-				"error": fmt.Sprintf("User %d, you can't get all articles because %s", userID, err),
+				"error": fmt.Sprintf("User %d, you can't get all articles.", userID),
 			})
 		return
 	}
@@ -148,7 +148,6 @@ func AuthRequired(c *gin.Context) {
 	if user == nil {
 		// Abort the request with the appropriate error code
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
-
 		return
 	}
 	// 有登入過的Session紀錄，繼續執行

@@ -3,21 +3,11 @@ package model
 import (
 	"database/sql"
 	"fmt"
-	"time"
 
 	// Mysql的Driver
 	_ "github.com/go-sql-driver/mysql"
 )
 
-/*Article 資料表是MySQL資料庫UserDB中的資料表，
-儲存使用者撰寫的文章*/
-type Article struct {
-	ArticleID int
-	UserID    int
-	Title     string
-	Content   string
-	EditTime  time.Time
-}
 type MyDB struct {
 	*sql.DB
 }
@@ -45,4 +35,3 @@ func connectMysql(userName, userPassword, dbName string) (*sql.DB, error) {
 
 	return sql.Open("mysql", dataSourceName)
 }
-
