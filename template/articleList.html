@@ -1,25 +1,29 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>文章列表</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>
-        <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-        <form action="/logout" method="GET">
-            <h1>歡迎回來使用者"{{.username}}"</h1>
-            <input type="submit" value="登出">
-            
-        </form>
-        <script src="" async defer></script>
-    </body>
-</html>
+<!-- login.html is an index page -->
+
+<!-- Embed the head.html here -->
+{{ template "header.html" .}}
+<!-- Content Start -->
+
+<h1>歡迎回來使用者"{{.username}}"</h1>
+
+<form action="/logout" method="GET">
+    <input type="submit" value="登出">
+</form>
+<ol>
+    {{range .articles}}                 
+    <li><h3>標題:{{.Title}}</h3>
+        <h3>時間:{{.EditTime}}</h3>
+        <textarea name="" id="" cols="30" rows="10">
+            {{.Content}}
+        </textarea>
+        <!-- 改用RESTful風格撰寫API -->
+        {{if eq .UserID 1}}
+        <a href="edit?articleID={{.ArticleID}}">編輯</a>
+        {{end}}
+    </li>
+    {{end}}
+</ol>
+<!-- Content End -->
+
+<!-- Embed the footer.html here -->
+{{ template "footer.html" .}}

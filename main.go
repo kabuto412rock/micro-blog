@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"log"
 	"net/http"
@@ -15,6 +17,7 @@ import (
 
 type Env struct {
 	*model.MyDB
+	salt []byte
 }
 
 const (
@@ -37,7 +40,8 @@ func engine() *gin.Engine {
 	if err != nil {
 		log.Fatal("mydb's error:", err)
 	}
-	env := &Env{mydb}
+
+	env := &Env{mydb, []byte("IWOJ/qw#@$*(E")}
 
 	r := gin.New()
 	r.LoadHTMLGlob("template/*")
@@ -69,7 +73,7 @@ func (e *Env) login(c *gin.Context) {
 	userID, ok := e.GetUserID(username, password)
 	if ok {
 		// 成功登入
-		session.Set("user", userID)
+		session.Set(USER_KEY, userID)
 		expire := 3600 * 8
 		session.Options(sessions.Options{HttpOnly: true, MaxAge: expire})
 		if err := session.Save(); err != nil {
@@ -84,7 +88,6 @@ func (e *Env) login(c *gin.Context) {
 			Expires: time.Now().AddDate(0, 0, 1),
 		}
 		http.SetCookie(c.Writer, &cookie)
-
 		c.Redirect(http.StatusFound, "list")
 		// http.Redirect(c.Writer, c.Request, "list", http.StatusFound)
 		c.Abort()
@@ -103,7 +106,16 @@ func (e *Env) logout(c *gin.Context) {
 	c.Abort()
 }
 func (e *Env) index(c *gin.Context) {
-	c.HTML(200, "login.html", nil)
+	session := sessions.Default(c)
+	userID := session.Get(USER_KEY)
+
+	// 前往登入頁面
+	if userID == nil || userID == "" {
+		c.HTML(200, "login.html", nil)
+		return
+	}
+	// 已登入，前往文章列表頁面
+	c.Redirect(http.StatusFound, "list")
 }
 
 func (e *Env) articleList(c *gin.Context) {
@@ -123,6 +135,7 @@ func (e *Env) articleList(c *gin.Context) {
 	}
 	c.HTML(200, "articleList.html", gin.H{
 		"username": username,
+		"uID":      userID,
 		"articles": articles,
 	})
 }
@@ -140,4 +153,10 @@ func AuthRequired(c *gin.Context) {
 	}
 	// 有登入過的Session紀錄，繼續執行
 	c.Next()
+}
+
+func GetMD5Hash(text string) string {
+	hasher := md5.New()
+	hasher.Write([]byte(text))
+	return hex.EncodeToString(hasher.Sum(nil))
 }
