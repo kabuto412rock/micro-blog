@@ -43,12 +43,20 @@ func engine() *gin.Engine {
 
 	// 登入驗證的中介層(以是否存在session辨識使用者是否已登入)
 	r.Use(env.AuthRequired)
+
 	// 登出
 	r.GET("logout", env.Logout)
 
 	// 文章列表頁面
 	r.GET("list", env.ArticleList)
 
+	// 新建文章
 	r.POST("create", env.ArticleCreate)
+
+	// 刪除文章
+	r.POST("delete", env.ArticleDelete)
+
+	// 更新文章
+
 	return r
 }

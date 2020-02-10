@@ -120,9 +120,9 @@ func (db MyDB) updateArticle(a Article) (ok bool) {
 }
 
 // 刪除一個Article
-func (db MyDB) deleteArticle(articleID int) (ok bool) {
+func (db MyDB) DeleteArticle(articleID int, userID int) (ok bool) {
 	result, err := db.Exec(
-		`DELETE FROM Article WHERE articleID=?`, articleID)
+		`DELETE FROM Article WHERE articleID=? AND userID = ?`, articleID, userID)
 	if err != nil {
 		return false
 	}

@@ -24,9 +24,12 @@
         <p class="pure.pure-form-stacked">
             {{ .Content}}
         </p>
-        <!-- 改用RESTful風格撰寫API -->
+        
         {{if eq .UserID $currentUserID}}
         <a href="edit?articleID={{.ArticleID}}">編輯</a>
+        <form action="/delete?articleID={{.ArticleID}}" method="POST">
+            <input type="submit" value="刪除" >
+        </form>
         {{end}}
 
     </li>

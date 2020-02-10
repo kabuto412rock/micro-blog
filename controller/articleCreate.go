@@ -11,10 +11,11 @@ import (
 func (e Env) ArticleCreate(c *gin.Context) {
 	title := c.PostForm("title")
 	content := c.PostForm("content")
+
 	session := sessions.Default(c)
 	userID, ok := session.Get(UserKey).(int)
 
-	if !ok {
+	if title == "" || content == "" || !ok {
 		c.Redirect(302, "list")
 		c.Abort()
 		return
