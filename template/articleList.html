@@ -2,19 +2,21 @@
 
 <!-- Embed the head.html here -->
 {{ template "header.html" .}}
+
 <!-- Content Start -->
+{{$page := .page}}
+{{$articles := $page.Articles}}
 <div class="pure-group">
-
     <h1>歡迎回來使用者"{{.username}}"</h1>
-
-    <form action="/logout" method="GET">
-        <input type="submit" value="登出">
+    <button id="showCreatePaneButton" class="pure-button-active" onclick="showCreatePane()">新文章</button>
+    <form hidden action="insert/" method="POST" id="createArticlePane">
+        <input name="title" type="text" placeholder="輸入標題">
+        <input name="content" type="text" placeholder="寫點什麼吧~">
+        <input type="submit" value="建立">
     </form>
+    
 </div>
 <ul>
-    {{$page := .page}}
-    {{$articles := $page.Articles}}
-
     {{range $articles}}                 
     <li><div>標題:{{.Title}}</div>
         <div>時間:{{.EditTime}}</div>
@@ -33,7 +35,18 @@
         <div class="pure.pure-menu-item"><a href="list?pageIndex={{.}}&pageSize={{$page.PageSize}}">{{.}}</a></div>
     {{end}}
 </div>
-
+<script defer>
+    function showCreatePane() {
+        var createPane = document.getElementById("createArticlePane")
+        var btn = document.getElementById("showCreatePaneButton")
+        if (createPane.hidden) {
+            btn.innerText = "取消新文章"
+        } else {
+            btn.innerText = "新文章"
+        }
+        createPane.hidden = !createPane.hidden
+    }
+</script>
 
 <!-- Embed the footer.html here -->
 {{ template "footer.html" .}}
