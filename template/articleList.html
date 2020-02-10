@@ -4,6 +4,7 @@
 {{ template "header.html" .}}
 
 <!-- Content Start -->
+{{$currentUserID := .userID}}
 {{$page := .page}}
 {{$articles := $page.Articles}}
 <div class="pure-group">
@@ -24,7 +25,9 @@
             {{ .Content}}
         </p>
         <!-- 改用RESTful風格撰寫API -->
+        {{if eq .UserID $currentUserID}}
         <a href="edit?articleID={{.ArticleID}}">編輯</a>
+        {{end}}
 
     </li>
     {{end}}
