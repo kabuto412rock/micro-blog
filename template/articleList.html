@@ -11,21 +11,29 @@
         <input type="submit" value="登出">
     </form>
 </div>
-<ol>
-    {{range .articles}}                 
+<ul>
+    {{$page := .page}}
+    {{$articles := $page.Articles}}
+
+    {{range $articles}}                 
     <li><div>標題:{{.Title}}</div>
         <div>時間:{{.EditTime}}</div>
         <p class="pure.pure-form-stacked">
-            {{.Content}}
+            {{ .Content}}
         </p>
         <!-- 改用RESTful風格撰寫API -->
-        {{if eq .UserID 1}}
         <a href="edit?articleID={{.ArticleID}}">編輯</a>
-        {{end}}
+
     </li>
     {{end}}
-</ol>
-<!-- Content End -->
+</ul>
+<!-- 文章分頁(導向不同分頁的連結) -->
+<div id="pageLink" class="pure.pure-menu">
+    {{range $page.AnotherPageIndices}}
+        <div class="pure.pure-menu-item"><a href="list?pageIndex={{.}}&pageSize={{$page.PageSize}}">{{.}}</a></div>
+    {{end}}
+</div>
+
 
 <!-- Embed the footer.html here -->
 {{ template "footer.html" .}}

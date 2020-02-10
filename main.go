@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-contrib/sessions"
@@ -122,10 +123,21 @@ func (e *Env) articleList(c *gin.Context) {
 	session := sessions.Default(c)
 	userID := session.Get(USER_KEY)
 	username, err := c.Cookie(USER_NAME_KEY)
+	// 使用者根本沒登入 或登入時USER_NAME失效一樣錯誤返回
 	if err != nil {
-		username = "Undefined User"
+		notFoundHandler(c)
+		return
 	}
-	articles, ok := e.GetArticlesByPage(2, 10)
+	pageIndex, err := strconv.Atoi(c.Query("pageIndex"))
+	pageSize, err := strconv.Atoi(c.Query("pageSize"))
+	// 請求路徑的pageindex和pagesize有誤，幫忙重設定來到第一頁
+	if err != nil || pageIndex <= 0 {
+		pageIndex = 1
+	}
+	if pageSize > 25 || pageSize < 1 {
+		pageSize = 5
+	}
+	page, ok := e.GetArticlePageByIndex(pageIndex, pageSize)
 	if !ok {
 		c.JSON(http.StatusExpectationFailed,
 			gin.H{
@@ -136,7 +148,7 @@ func (e *Env) articleList(c *gin.Context) {
 	c.HTML(200, "articleList.html", gin.H{
 		"username": username,
 		"uID":      userID,
-		"articles": articles,
+		"page":     page,
 	})
 }
 
@@ -158,4 +170,11 @@ func GetMD5Hash(text string) string {
 	hasher := md5.New()
 	hasher.Write([]byte(text))
 	return hex.EncodeToString(hasher.Sum(nil))
+}
+
+func notFoundHandler(c *gin.Context) {
+	c.JSON(404, gin.H{
+		"error": "走錯地方囉，兄弟～",
+	})
+	c.Abort()
 }
