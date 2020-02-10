@@ -10,7 +10,7 @@
 <div class="pure-group">
     <h1>歡迎回來使用者"{{.username}}"</h1>
     <button id="showCreatePaneButton" class="pure-button-active" onclick="showCreatePane()">新文章</button>
-    <form hidden action="insert/" method="POST" id="createArticlePane">
+    <form hidden action="create/" method="POST" id="createArticlePane">
         <input name="title" type="text" placeholder="輸入標題">
         <input name="content" type="text" placeholder="寫點什麼吧~">
         <input type="submit" value="建立">

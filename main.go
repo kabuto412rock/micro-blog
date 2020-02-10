@@ -48,5 +48,7 @@ func engine() *gin.Engine {
 
 	// 文章列表頁面
 	r.GET("list", env.ArticleList)
+
+	r.POST("create", env.ArticleCreate)
 	return r
 }

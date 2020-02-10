@@ -37,7 +37,7 @@ func (db MyDB) GetArticlePageByIndex(currentPageIndex int, onePageSize int) (pag
 	}
 	// ex: onePageSize = 5, currentPageIndex
 	indexStart := (currentPageIndex - 1) * onePageSize
-	rows, err := db.Query("SELECT articleID, userID, title, content, editTime FROM Article LIMIT ? OFFSET ?", onePageSize, indexStart)
+	rows, err := db.Query("SELECT articleID, userID, title, content, editTime FROM Article ORDER BY editTime DESC LIMIT ? OFFSET ?", onePageSize, indexStart)
 	var articles []Article
 	if err != nil {
 		return nil, false
@@ -87,11 +87,11 @@ func (db MyDB) GetArticlePageByIndex(currentPageIndex int, onePageSize int) (pag
 }
 
 /*插入(新增)一個Article*/
-func (db MyDB) insertArticle(a Article) (ok bool) {
+func (db MyDB) InsertArticle(a Article) (ok bool) {
 	result, err := db.Exec(`
-	INSERT INTO Article(userID, title, content)
-	Values(?, ?, ?)
-	`)
+	INSERT INTO Article(userID, title, content, editTime)
+	Values(?, ?, ?, Now())
+	`, a.UserID, a.Title, a.Content)
 	if err != nil {
 		return false
 	}
