@@ -17,7 +17,7 @@ type Article struct {
 	Title     string
 	Content   string
 	EditTime  time.Time
-	username  string
+	Username  string
 }
 
 func (db MyDB) GetArticlesCount() (count int, ok bool) {
@@ -37,7 +37,12 @@ func (db MyDB) GetArticlePageByIndex(currentPageIndex int, onePageSize int) (pag
 	}
 	// ex: onePageSize = 5, currentPageIndex
 	indexStart := (currentPageIndex - 1) * onePageSize
-	rows, err := db.Query("SELECT articleID, userID, title, content, editTime FROM Article ORDER BY editTime DESC LIMIT ? OFFSET ?", onePageSize, indexStart)
+	rows, err := db.Query(
+		`SELECT Article.articleID, Article.userID, Article.title, Article.content, Article.editTime, User.name
+		FROM Article
+		INNER JOIN User ON Article.userID=User.userID
+		ORDER BY Article.editTime DESC LIMIT ? OFFSET ?;`,
+		onePageSize, indexStart)
 	var articles []Article
 	if err != nil {
 		return nil, false
@@ -46,7 +51,7 @@ func (db MyDB) GetArticlePageByIndex(currentPageIndex int, onePageSize int) (pag
 	var a Article
 	// 依序取得Article放入articles並計數有幾篇(articleCount)文章
 	for rows.Next() {
-		err := rows.Scan(&a.ArticleID, &a.UserID, &a.Title, &a.Content, &a.EditTime)
+		err := rows.Scan(&a.ArticleID, &a.UserID, &a.Title, &a.Content, &a.EditTime, &a.Username)
 		if err != nil {
 			return nil, false
 		}

@@ -20,6 +20,7 @@
 <ul>
     {{range $articles}}                 
     <li><div>標題:{{.Title}}</div>
+        <div>作者:{{.Username}}</div>
         <div>時間:{{.EditTime}}</div>
         <p class="pure.pure-form-stacked">
             {{ .Content}}
@@ -51,6 +52,10 @@
             btn.innerText = "新文章"
         }
         createPane.hidden = !createPane.hidden
+    }
+
+    function showEditPane() {
+
     }
 </script>
 
