@@ -20,6 +20,8 @@
         <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->    
         <!--Embed the menu.html template at this location-->
+        {{if .userID }}
         <form action="/logout" method="GET">
             <input type="submit" value="登出">
         </form>
+        {{ end }}

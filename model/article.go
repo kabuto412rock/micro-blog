@@ -103,12 +103,12 @@ func (db MyDB) InsertArticle(a Article) (ok bool) {
 }
 
 // 更新一個Article
-func (db MyDB) updateArticle(a Article) (ok bool) {
+func (db MyDB) UpdateArticle(a Article) (ok bool) {
 	result, err := db.Exec(`
 	UPDATE Article
 	SET title=?, content=?
-	WHERE articleID=?
-	`, a.Title, a.Content, a.ArticleID)
+	WHERE articleID=? and userID=?
+	`, a.Title, a.Content, a.ArticleID, a.UserID)
 
 	if err != nil {
 		return false

@@ -57,6 +57,6 @@ func engine() *gin.Engine {
 	r.POST("delete", env.ArticleDelete)
 
 	// 更新文章
-
+	r.POST("update", env.ArticleEdit)
 	return r
 }

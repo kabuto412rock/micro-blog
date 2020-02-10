@@ -13,7 +13,7 @@
     <form hidden action="create/" method="POST" id="createArticlePane">
         <input name="title" type="text" placeholder="輸入標題">
         <input name="content" type="text" placeholder="寫點什麼吧~">
-        <input type="submit" value="建立">
+        <input class="pure-button" type="submit" value="建立">
     </form>
     
 </div>
@@ -26,10 +26,18 @@
         </p>
         
         {{if eq .UserID $currentUserID}}
-        <a href="edit?articleID={{.ArticleID}}">編輯</a>
-        <form action="/delete?articleID={{.ArticleID}}" method="POST">
-            <input type="submit" value="刪除" >
-        </form>
+            
+            <button class="pure.pure-button" onclick="showEditPane('{{ .ArticleID}}')">編輯</button>
+            
+            <form hidden action="update?articleID={{.ArticleID}}" method="POST" id="edit{{.ArticleID}}">
+                <input name="title" type="text" placeholder="輸入標題" value="{{.Title}}" >
+                <input name="content" type="text" placeholder="寫點什麼吧~" value="{{.Content}}">
+                <input class="pure-button" type="submit" value="儲存">
+            </form>
+
+            <form action="/delete?articleID={{.ArticleID}}" method="POST">
+                <input class="pure-button" type="submit" value="刪除" >
+            </form>
         {{end}}
 
     </li>
@@ -51,6 +59,10 @@
             btn.innerText = "新文章"
         }
         createPane.hidden = !createPane.hidden
+    }
+    function showEditPane(paneID) {
+        var pane = document.getElementById('edit'+paneID)
+        pane.hidden = !pane.hidden
     }
 </script>
 
