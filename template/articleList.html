@@ -9,17 +9,11 @@
 {{$page := .page}}
 {{$articles := $page.Articles}}
 <div class="pure-group">
-
     <h1>歡迎回來使用者"{{.username}}"</h1>
     <!-- 點擊顯示新文章區塊的按鈕 -->
     <button id="showCreatePaneButton" class="pure-button-active" onclick="showCreatePane()">新文章</button>
-    <!-- 新文章的編輯區塊 -->
-    <form hidden action="create/" method="POST" id="createArticlePane">
-        <input name="title" type="text" placeholder="輸入標題">
-        <input name="content" type="text" placeholder="寫點什麼吧~">
-        <input class="pure-button" type="submit" value="建立">
-    </form>
-    
+    <!-- 新文章的編輯區塊，平時隱藏起來 -->
+    {{template "articleCreate"}}    
 </div>
 <ul>
     {{range $articles}}                 
@@ -37,16 +31,11 @@
         
         {{if eq .UserID $currentUserID}}
             <!-- 點擊顯示編輯區的按鈕 -->
-            <button class="pure.pure-button" onclick="showEditPane('{{ .ArticleID}}')">編輯</button>
+            <button id="showEditButton{{.ArticleID}}" class="pure.pure-button" onclick="showEditPane('{{ .ArticleID}}')">編輯</button>
             <button class="pure.pure-button" onclick="deleteArticle('{{ .ArticleID}}')">刪除</button>
 
             <!-- 文章的編輯區 -->
-            <form hidden class="pure.pure-button-hover" action="update?articleID={{.ArticleID}}" method="POST" id="edit{{.ArticleID}}">
-                <input name="title" type="text" placeholder="輸入標題" value="{{.Title}}" >
-                <input name="content" type="text" placeholder="寫點什麼吧~" value="{{.Content}}">
-                <input class="pure-button" type="submit" value="儲存">
-            </form>
-            
+            {{template "articleEdit" .}}
         {{end}}
 
     </li>
@@ -78,6 +67,12 @@
     }
     function showEditPane(paneID) {
         var pane = document.getElementById('edit'+paneID)
+        var showEditButton = document.getElementById("showEditButton"+paneID)
+        if (pane.hidden == true) {
+            showEditButton.innerText = "取消編輯"
+        } else {
+            showEditButton.innerText = "編輯"
+        }
         pane.hidden = !pane.hidden
     }
 

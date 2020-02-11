@@ -1,0 +1,8 @@
+<!-- 新文章的編輯區塊 -->
+{{define "articleCreate"}}
+<form hidden action="create/" method="POST" id="createArticlePane">
+    <input name="title" type="text" placeholder="輸入標題">
+    <input name="content" type="text" placeholder="寫點什麼吧~">
+    <input class="pure-button" type="submit" value="建立">
+</form>
+{{end}}
