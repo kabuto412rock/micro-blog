@@ -53,38 +53,8 @@
         </div>
     {{end}}
 </div>
-<!-- JS函數 -->
-<script defer>
-    function showCreatePane() {
-        var createPane = document.getElementById("createArticlePane")
-        var btn = document.getElementById("showCreatePaneButton")
-        if (createPane.hidden) {
-            btn.innerText = "取消新文章"
-        } else {
-            btn.innerText = "新文章"
-        }
-        createPane.hidden = !createPane.hidden
-    }
-    function showEditPane(paneID) {
-        var pane = document.getElementById('edit'+paneID)
-        var showEditButton = document.getElementById("showEditButton"+paneID)
-        if (pane.hidden == true) {
-            showEditButton.innerText = "取消編輯"
-        } else {
-            showEditButton.innerText = "編輯"
-        }
-        pane.hidden = !pane.hidden
-    }
-
-    function deleteArticle(articleID) {
-        var form = document.createElement('form');
-        form.setAttribute('method', 'post');
-        form.setAttribute('action', '/delete?articleID='+articleID);
-        form.style.display = 'hidden';
-        document.body.appendChild(form)
-        form.submit();
-    }
-</script>
+<!-- JS -->
+<script src="js/articleList.js" defer></script>
 
 <!-- Embed the footer.html here -->
 {{ template "footer.html" .}}
