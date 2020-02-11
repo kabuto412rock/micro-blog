@@ -1,0 +1,12 @@
+<!-- register.html for useres register their ID & Password-->
+<!-- Embed the head.html here -->
+{{ template "header.html" .}}
+<form action="/register" method="POST">
+    <input type="text" name="username" placeholder="帳號" autocomplete="on">
+    <input type="password"  name="password" placeholder="密碼" autocomplete="on">
+    <input class="pure-button-" type="submit" value="註冊">
+</form>
+<button class="pure-button" onclick="javascript:history.back();">上一頁</button>
+
+<!-- Embed the footer.html here -->
+{{ template "footer.html" .}}

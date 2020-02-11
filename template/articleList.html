@@ -8,29 +8,45 @@
 {{$page := .page}}
 {{$articles := $page.Articles}}
 <div class="pure-group">
+
     <h1>歡迎回來使用者"{{.username}}"</h1>
+    <!-- 點擊顯示新文章區塊的按鈕 -->
     <button id="showCreatePaneButton" class="pure-button-active" onclick="showCreatePane()">新文章</button>
+    <!-- 新文章的編輯區塊 -->
     <form hidden action="create/" method="POST" id="createArticlePane">
         <input name="title" type="text" placeholder="輸入標題">
         <input name="content" type="text" placeholder="寫點什麼吧~">
-        <input type="submit" value="建立">
+        <input class="pure-button" type="submit" value="建立">
     </form>
     
 </div>
 <ul>
     {{range $articles}}                 
+    
     <li><div>標題:{{.Title}}</div>
+        {{if .Username }}
         <div>作者:{{.Username}}</div>
+        {{ else}}
+        <div> <strike>作者已被刪除</strike></div>
+        {{end}}
         <div>時間:{{.EditTime}}</div>
         <p class="pure.pure-form-stacked">
             {{ .Content}}
         </p>
         
         {{if eq .UserID $currentUserID}}
-        <a href="edit?articleID={{.ArticleID}}">編輯</a>
-        <form action="/delete?articleID={{.ArticleID}}" method="POST">
-            <input type="submit" value="刪除" >
-        </form>
+            <!-- 點擊顯示編輯區的按鈕 -->
+            <button class="pure.pure-button" onclick="showEditPane('{{ .ArticleID}}')">編輯</button>
+            <!-- 文章的編輯區 -->
+            <form hidden class="pure.pure-button-hover" action="update?articleID={{.ArticleID}}" method="POST" id="edit{{.ArticleID}}">
+                <input name="title" type="text" placeholder="輸入標題" value="{{.Title}}" >
+                <input name="content" type="text" placeholder="寫點什麼吧~" value="{{.Content}}">
+                <input class="pure-button" type="submit" value="儲存">
+            </form>
+            <!-- 文章的刪除按鈕 -->
+            <form action="/delete?articleID={{.ArticleID}}" method="POST">
+                <input class="pure-button" type="submit" value="刪除" >
+            </form>
         {{end}}
 
     </li>
@@ -42,6 +58,7 @@
         <div class="pure.pure-menu-item"><a href="list?pageIndex={{.}}&pageSize={{$page.PageSize}}">{{.}}</a></div>
     {{end}}
 </div>
+<!-- JS函數 -->
 <script defer>
     function showCreatePane() {
         var createPane = document.getElementById("createArticlePane")
@@ -53,9 +70,9 @@
         }
         createPane.hidden = !createPane.hidden
     }
-
-    function showEditPane() {
-
+    function showEditPane(paneID) {
+        var pane = document.getElementById('edit'+paneID)
+        pane.hidden = !pane.hidden
     }
 </script>
 

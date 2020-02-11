@@ -3,6 +3,7 @@ package controller
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"log"
 	"net/http"
 
 	"github.com/gin-contrib/sessions"
@@ -12,12 +13,23 @@ import (
 
 type Env struct {
 	*model.MyDB
+	salt []byte
 }
 
 const (
 	UserKey     = "user"
 	UserNameKey = "user_name"
 )
+
+func NewEnv(salt []byte) *Env {
+	mydb, err := model.New()
+	if err != nil {
+		log.Fatal("mydb's error:", err)
+	}
+
+	env := &Env{MyDB: mydb, salt: salt}
+	return env
+}
 
 // AuthRequired 驗證使用者登入的中介層(採用Cookie Session)
 func (e Env) AuthRequired(c *gin.Context) {
@@ -33,10 +45,10 @@ func (e Env) AuthRequired(c *gin.Context) {
 	c.Next()
 }
 
-func GetMD5Hash(text string) string {
+func (e Env) GetMD5Hash(text string) string {
 	hasher := md5.New()
 	hasher.Write([]byte(text))
-	return hex.EncodeToString(hasher.Sum(nil))
+	return hex.EncodeToString(hasher.Sum(e.salt))
 }
 
 func NotFoundHandler(c *gin.Context) {

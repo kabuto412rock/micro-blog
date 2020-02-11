@@ -10,7 +10,8 @@ import (
 
 func (e *Env) Login(c *gin.Context) {
 	username := c.PostForm("username")
-	password := c.PostForm("password")
+	password := e.GetMD5Hash(c.PostForm("password"))
+
 	session := sessions.Default(c)
 	userID, ok := e.GetUserID(username, password)
 	if ok {
@@ -27,7 +28,7 @@ func (e *Env) Login(c *gin.Context) {
 		cookie := http.Cookie{
 			Name:    UserNameKey,
 			Value:   username,
-			Expires: time.Now().AddDate(0, 0, 1),
+			Expires: time.Now().AddDate(0, 2, 1),
 		}
 		http.SetCookie(c.Writer, &cookie)
 		c.Redirect(http.StatusFound, "list")

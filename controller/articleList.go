@@ -31,7 +31,7 @@ func (e *Env) ArticleList(c *gin.Context) {
 	if !ok {
 		c.JSON(http.StatusExpectationFailed,
 			gin.H{
-				"error": fmt.Sprintf("User %d, you can't get all articles.", userID),
+				"error": fmt.Sprintf("User %s, you can't get all articles.", username),
 			})
 		return
 	}

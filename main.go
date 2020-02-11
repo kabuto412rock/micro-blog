@@ -7,7 +7,6 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"github.com/kabuto412rock/microblog/controller"
-	"github.com/kabuto412rock/microblog/model"
 )
 
 func main() {
@@ -21,12 +20,7 @@ func main() {
 }
 
 func engine() *gin.Engine {
-	mydb, err := model.New()
-	if err != nil {
-		log.Fatal("mydb's error:", err)
-	}
-
-	env := &controller.Env{mydb}
+	env := controller.NewEnv([]byte("我是鹽值@w@，用來讓加密更安全Bj4"))
 
 	r := gin.New()
 	r.LoadHTMLGlob("template/*")
@@ -40,6 +34,9 @@ func engine() *gin.Engine {
 	r.GET("/", env.Index)
 	// 登入請求
 	r.POST("login", env.Login)
+	// 註冊請求 Get->回報頁面, Post->
+	r.GET("register", env.RegisterGET)
+	r.POST("register", env.RegisterPOST)
 
 	// 登入驗證的中介層(以是否存在session辨識使用者是否已登入)
 	r.Use(env.AuthRequired)
@@ -57,6 +54,6 @@ func engine() *gin.Engine {
 	r.POST("delete", env.ArticleDelete)
 
 	// 更新文章
-
+	r.POST("update", env.ArticleEdit)
 	return r
 }
