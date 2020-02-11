@@ -10,7 +10,7 @@ import (
 func (e *Env) Index(c *gin.Context) {
 	session := sessions.Default(c)
 	userID := session.Get(UserKey)
-
+	
 	// 前往登入頁面
 	if userID == nil || userID == "" {
 		c.HTML(200, "login.html", nil)

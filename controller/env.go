@@ -17,8 +17,7 @@ type Env struct {
 }
 
 const (
-	UserKey     = "user"
-	UserIDKey   = "user_id"
+	UserKey     = "user_id"
 	UserNameKey = "user_name"
 )
 
@@ -52,9 +51,9 @@ func (e Env) GetMD5Hash(text string) string {
 	return hex.EncodeToString(hasher.Sum(e.salt))
 }
 
-func NotFoundHandler(c *gin.Context) {
+func NotFoundHandler(c *gin.Context, err error) {
 	c.JSON(404, gin.H{
-		"error": "走錯地方囉，兄弟～",
+		"error": "兄弟，你的錯誤是:" + err.Error(),
 	})
 	c.Abort()
 }

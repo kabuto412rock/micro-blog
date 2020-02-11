@@ -34,6 +34,7 @@ func engine() *gin.Engine {
 	r.GET("/", env.Index)
 	// 登入請求
 	r.POST("login", env.Login)
+	
 	// 註冊請求 Get->回報頁面, Post->
 	r.GET("register", env.RegisterGET)
 	r.POST("register", env.RegisterPOST)

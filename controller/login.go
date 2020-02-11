@@ -13,14 +13,14 @@ func (e *Env) Login(c *gin.Context) {
 	password := e.GetMD5Hash(c.PostForm("password"))
 
 	session := sessions.Default(c)
-	userID, ok := e.GetUserID(userID, password)
+	username, ok := e.GetUserName(userID, password)
+	// 成功登入
 	if ok {
-		// 成功登入
 		session.Set(UserKey, userID)
 		expire := 3600 * 8
 		session.Options(sessions.Options{HttpOnly: true, MaxAge: expire})
 		if err := session.Save(); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 				"Fail": "Your session can't save",
 			})
 			return
@@ -32,8 +32,8 @@ func (e *Env) Login(c *gin.Context) {
 		}
 		http.SetCookie(c.Writer, &cookie)
 		c.Redirect(http.StatusFound, "list")
-		// http.Redirect(c.Writer, c.Request, "list", http.StatusFound)
-		c.Abort()
+
+		// c.Abort()
 		return
 	}
 	// 登入失敗

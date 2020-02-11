@@ -1,8 +1,8 @@
 package model
 
-func (db MyDB) GetUserName(userID, password string) (username int, ok bool) {
+func (db MyDB) GetUserName(userID, password string) (username string, ok bool) {
 
-	row := db.QueryRow("SELECT userID from User WHERE userID = ? and  password=?", userID, password)
+	row := db.QueryRow("SELECT name from User WHERE userID=? AND  password=?", userID, password)
 	if err := row.Scan(&username); err != nil {
 		return username, false
 	}
@@ -10,8 +10,8 @@ func (db MyDB) GetUserName(userID, password string) (username int, ok bool) {
 }
 
 func (db MyDB) isUserIDValid(userID string) (ok bool) {
-	// 使用者ID 至少十碼
-	if len(userID) < 10 {
+	// 使用者ID
+	if len(userID) < 1 {
 		return false
 	}
 	row := db.QueryRow(`
@@ -28,7 +28,7 @@ func (db MyDB) CreateUser(userID, username, encodePassword string) (ok bool) {
 	if ok := db.isUserIDValid(userID); !ok {
 		return false
 	}
-	if len(username) < 3 {
+	if len(username) < 1 {
 		return false
 	}
 	result, err := db.Exec(`

@@ -12,14 +12,16 @@ import (
 func (e *Env) ArticleList(c *gin.Context) {
 	session := sessions.Default(c)
 	userID := session.Get(UserKey)
+
 	username, err := c.Cookie(UserNameKey)
-	// 使用者根本沒登入 或登入時USER_NAME失效一樣錯誤返回
+	// 使用者根本沒登入or登入時USER_NAME失效一樣錯誤返回
 	if err != nil {
-		NotFoundHandler(c)
+		NotFoundHandler(c, err)
 		return
 	}
 	pageIndex, err := strconv.Atoi(c.Query("pageIndex"))
 	pageSize, err := strconv.Atoi(c.Query("pageSize"))
+	
 	// 請求路徑的pageindex和pagesize有誤，幫忙重設定來到第一頁
 	if err != nil || pageIndex <= 0 {
 		pageIndex = 1
