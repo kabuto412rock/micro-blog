@@ -18,6 +18,7 @@ type Env struct {
 
 const (
 	UserKey     = "user"
+	UserIDKey   = "user_id"
 	UserNameKey = "user_name"
 )
 

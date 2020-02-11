@@ -9,11 +9,11 @@ import (
 )
 
 func (e *Env) Login(c *gin.Context) {
-	username := c.PostForm("username")
+	userID := c.PostForm("userID")
 	password := e.GetMD5Hash(c.PostForm("password"))
 
 	session := sessions.Default(c)
-	userID, ok := e.GetUserID(username, password)
+	userID, ok := e.GetUserID(userID, password)
 	if ok {
 		// 成功登入
 		session.Set(UserKey, userID)

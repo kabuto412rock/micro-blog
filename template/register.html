@@ -2,8 +2,9 @@
 <!-- Embed the head.html here -->
 {{ template "header.html" .}}
 <form action="/register" method="POST">
-    <input type="text" name="username" placeholder="帳號" autocomplete="on">
-    <input type="password"  name="password" placeholder="密碼" autocomplete="on">
+    <input type="text" name="userID" placeholder="預先設定帳號">
+    <input type="text" name="username" placeholder="暱稱" >
+    <input type="password"  name="password" placeholder="密碼" >
     <input class="pure-button-" type="submit" value="註冊">
 </form>
 <button class="pure-button" onclick="javascript:history.back();">上一頁</button>

@@ -2,7 +2,7 @@
 <!-- Embed the head.html here -->
 {{ template "header.html" .}}
 <form action="/login" method="POST">
-    <input type="text" name="username" placeholder="帳號" autocomplete="on">
+    <input type="text" name="userID" placeholder="帳號" autocomplete="on">
     <input type="password" name="password" placeholder="密碼" autocomplete="on">
     <input class="pure-button-primary" type="submit" value="登入">
     <a class="pure-button-hover" href="/register">註冊帳號</a>

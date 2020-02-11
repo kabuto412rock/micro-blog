@@ -1,16 +1,21 @@
 package model
 
-func (db MyDB) GetUserID(username, password string) (userID int, ok bool) {
+func (db MyDB) GetUserName(userID, password string) (username int, ok bool) {
 
-	row := db.QueryRow("SELECT userID from User WHERE name = ? and  password=?", username, password)
-	if err := row.Scan(&userID); err != nil {
-		return userID, false
+	row := db.QueryRow("SELECT userID from User WHERE userID = ? and  password=?", userID, password)
+	if err := row.Scan(&username); err != nil {
+		return username, false
 	}
-	return userID, true
+	return username, true
 }
-func (db MyDB) isUserNameValid(username string) (ok bool) {
+
+func (db MyDB) isUserIDValid(userID string) (ok bool) {
+	// 使用者ID 至少十碼
+	if len(userID) < 10 {
+		return false
+	}
 	row := db.QueryRow(`
-	SELECT COUNT(*) FROM User WHERE name=?`, username)
+	SELECT COUNT(*) FROM User WHERE userID=?`, userID)
 	var count int
 	err := row.Scan(&count)
 	if err != nil || count != 0 {
@@ -19,14 +24,17 @@ func (db MyDB) isUserNameValid(username string) (ok bool) {
 	return true
 
 }
-func (db MyDB) CreateUser(username, encodePassword string) (ok bool) {
-	if ok := db.isUserNameValid(username); !ok {
+func (db MyDB) CreateUser(userID, username, encodePassword string) (ok bool) {
+	if ok := db.isUserIDValid(userID); !ok {
+		return false
+	}
+	if len(username) < 3 {
 		return false
 	}
 	result, err := db.Exec(`
-	INSERT INTO User(name, password)
-	Values(?, ?)
-	`, username, encodePassword)
+	INSERT INTO User(userID, name, password)
+	Values(?, ?, ?)
+	`, userID, username, encodePassword)
 	if err != nil {
 		return false
 	}
