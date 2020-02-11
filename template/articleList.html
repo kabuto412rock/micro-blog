@@ -5,6 +5,7 @@
 
 <!-- Content Start -->
 {{$currentUserID := .userID}}
+
 {{$page := .page}}
 {{$articles := $page.Articles}}
 <div class="pure-group">
@@ -55,7 +56,13 @@
 <!-- 文章分頁(導向不同分頁的連結) -->
 <div id="pageLink" class="pure.pure-menu">
     {{range $page.AnotherPageIndices}}
-        <div class="pure.pure-menu-item"><a href="list?pageIndex={{.}}&pageSize={{$page.PageSize}}">{{.}}</a></div>
+        <div class="pure.pure-menu-item">
+            {{if ne . $page.CurrentIndex}}
+            <a href="list?pageIndex={{.}}&pageSize={{$page.PageSize}}">{{.}}</a>
+            {{else}}
+            <a>{{.}}</a>
+            {{end}}
+        </div>
     {{end}}
 </div>
 <!-- JS函數 -->
@@ -74,6 +81,7 @@
         var pane = document.getElementById('edit'+paneID)
         pane.hidden = !pane.hidden
     }
+
 </script>
 
 <!-- Embed the footer.html here -->

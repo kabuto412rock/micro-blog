@@ -13,7 +13,7 @@ type ArticlePage struct {
 儲存使用者撰寫的文章*/
 type Article struct {
 	ArticleID int
-	UserID    int
+	UserID    string
 	Title     string
 	Content   string
 	EditTime  time.Time
@@ -125,7 +125,7 @@ func (db MyDB) UpdateArticle(a Article) (ok bool) {
 }
 
 // 刪除一個Article
-func (db MyDB) DeleteArticle(articleID int, userID int) (ok bool) {
+func (db MyDB) DeleteArticle(articleID int, userID string) (ok bool) {
 	result, err := db.Exec(
 		`DELETE FROM Article WHERE articleID=? AND userID = ?`, articleID, userID)
 	if err != nil {

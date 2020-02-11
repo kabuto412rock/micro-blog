@@ -11,7 +11,7 @@ import (
 
 func (e Env) ArticleDelete(c *gin.Context) {
 	session := sessions.Default(c)
-	userID, ok := session.Get(UserKey).(int)
+	userID, ok := session.Get(UserKey).(string)
 
 	articleID, err := strconv.Atoi(c.Query("articleID"))
 	if !ok || err != nil {

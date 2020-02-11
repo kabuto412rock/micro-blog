@@ -14,7 +14,7 @@ func (e Env) ArticleEdit(c *gin.Context) {
 	content := c.PostForm("content")
 
 	session := sessions.Default(c)
-	userID, ok := session.Get(UserKey).(int)
+	userID, ok := session.Get(UserKey).(string)
 	articleID, err := strconv.Atoi(c.Query("articleID"))
 
 	if title == "" || content == "" || !ok || err != nil {

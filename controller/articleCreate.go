@@ -13,7 +13,7 @@ func (e Env) ArticleCreate(c *gin.Context) {
 	content := c.PostForm("content")
 
 	session := sessions.Default(c)
-	userID, ok := session.Get(UserKey).(int)
+	userID, ok := session.Get(UserKey).(string)
 
 	if title == "" || content == "" || !ok {
 		c.Redirect(302, "list")
