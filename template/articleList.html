@@ -38,16 +38,15 @@
         {{if eq .UserID $currentUserID}}
             <!-- 點擊顯示編輯區的按鈕 -->
             <button class="pure.pure-button" onclick="showEditPane('{{ .ArticleID}}')">編輯</button>
+            <button class="pure.pure-button" onclick="deleteArticle('{{ .ArticleID}}')">刪除</button>
+
             <!-- 文章的編輯區 -->
             <form hidden class="pure.pure-button-hover" action="update?articleID={{.ArticleID}}" method="POST" id="edit{{.ArticleID}}">
                 <input name="title" type="text" placeholder="輸入標題" value="{{.Title}}" >
                 <input name="content" type="text" placeholder="寫點什麼吧~" value="{{.Content}}">
                 <input class="pure-button" type="submit" value="儲存">
             </form>
-            <!-- 文章的刪除按鈕 -->
-            <form action="/delete?articleID={{.ArticleID}}" method="POST">
-                <input class="pure-button" type="submit" value="刪除" >
-            </form>
+            
         {{end}}
 
     </li>
@@ -82,6 +81,14 @@
         pane.hidden = !pane.hidden
     }
 
+    function deleteArticle(articleID) {
+        var form = document.createElement('form');
+        form.setAttribute('method', 'post');
+        form.setAttribute('action', '/delete?articleID='+articleID);
+        form.style.display = 'hidden';
+        document.body.appendChild(form)
+        form.submit();
+    }
 </script>
 
 <!-- Embed the footer.html here -->
