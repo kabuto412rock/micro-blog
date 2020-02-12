@@ -11,18 +11,22 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
-        <style>
-            
-            
-        </style>
+        <link rel="stylesheet" href="css/general.css">
     </head>
     <body class="container">
     <!--[if lt IE 7]>
         <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->    
         <!--Embed the menu.html template at this location-->
-        {{if .userID }}
-        <form action="/logout" method="GET">
-            <input type="submit" value="登出">
-        </form>
-        {{ end }}
+        <div class="header">
+
+            {{if .userID }}
+            <form class="pure-group" action="/logout" method="GET">
+                <p class="pure.pure-menu-item header-item">當前使用者:"{{.username}}"</p>
+                <input class="pure.pure-menu-item pure-button button-warning header-item" type="submit" value="登出">
+            </form>
+            <br/>
+            {{ end }}
+        </div>
+        <div class="content">
+            

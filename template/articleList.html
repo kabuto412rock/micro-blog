@@ -9,10 +9,7 @@
 {{$articles := $page.Articles}}
 
 <div class="pure-group">
-    <h1>歡迎回來使用者"{{.username}}"</h1>
-    <!-- 點擊顯示新文章區塊的按鈕 -->
-    <button id="showCreatePaneButton" class="pure-button-active" onclick="showCreatePane()">新文章</button>
-    <!-- 新文章的編輯區塊，平時隱藏起來 -->
+    <!-- 編輯新文章區塊 -->
     {{template "articleCreate"}}    
 </div>
 <ul>
@@ -30,19 +27,10 @@
         </p>
         
         {{if eq .UserID $currentUserID}}
-            <!-- 編輯文章區塊 -->
+            <!-- 編輯articleID文章區塊 -->
             {{template "articleEdit" .}}
-            <!-- 刪除文章區塊 -->
-            <!-- 點擊顯示刪除dialog按鈕 -->
-            <button class="pure.pure-button" onclick="showDeleteDialog('{{ .ArticleID}}')">刪除</button>
-            <dialog id="deleteDialog{{.ArticleID}}">
-                <form method="dialog">
-                    是否刪除Dialog?
-                    <button onclick="deleteArticle('{{.ArticleID}}')">刪除</button>
-                </form>
-                
-              </dialog>
-              
+            <!-- 刪除articleID文章區塊 -->
+            {{template "articleDelete" .}}
         {{end}}
 
     </li>

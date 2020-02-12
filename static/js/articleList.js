@@ -1,13 +1,9 @@
 var createPane = document.getElementById("createArticlePane")
-var showCreatePanBtn = document.getElementById("showCreatePaneButton")
+var showCreatePaneBtn = document.getElementById("showCreatePaneButton")
 
 // 顯示id為'createArticlePane'的新建文章區塊(如果已經顯示，則隱藏。)
 function showCreatePane() {
-  if (createPane.hidden) {
-    showCreatePanBtn.innerText = "取消新文章"
-  } else {
-    showCreatePanBtn.innerText = "新文章"
-  }
+  showCreatePaneBtn.hidden = !showCreatePaneBtn.hidden;
   createPane.hidden = !createPane.hidden
 }
 

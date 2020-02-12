@@ -1,13 +1,16 @@
 <!-- register.html for useres register their ID & Password-->
 <!-- Embed the head.html here -->
 {{ template "header.html" .}}
-<form action="/register" method="POST">
-    <input type="text" name="userID" placeholder="預先設定帳號">
-    <input type="text" name="username" placeholder="暱稱" >
-    <input type="password"  name="password" placeholder="密碼" >
-    <input class="pure-button-" type="submit" value="註冊">
+
+<form class="pure-form" action="/register" method="POST">
+    <input class=" pure-input-1-3" type="text" name="userID" placeholder="帳號">
+    <input class=" pure-input-1-3" type="text" name="username" placeholder="暱稱" >
+    <input class=" pure-input-1-3" type="password"  name="password" placeholder="密碼" >
+    <div class="pure.pure-button-group">
+        <input  class="pure-button pure-button-primary" type="submit" value="註冊">
+        <a class="pure-button pure-button-hover" href="/">回登入畫面</a>
+    </div>
 </form>
-<button class="pure-button" onclick="javascript:history.back();">上一頁</button>
 
 <!-- Embed the footer.html here -->
 {{ template "footer.html" .}}
