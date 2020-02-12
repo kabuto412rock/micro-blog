@@ -5,9 +5,9 @@
 
 <!-- Content Start -->
 {{$currentUserID := .userID}}
-
 {{$page := .page}}
 {{$articles := $page.Articles}}
+
 <div class="pure-group">
     <h1>歡迎回來使用者"{{.username}}"</h1>
     <!-- 點擊顯示新文章區塊的按鈕 -->
@@ -30,18 +30,25 @@
         </p>
         
         {{if eq .UserID $currentUserID}}
-            <!-- 點擊顯示編輯區的按鈕 -->
-            <button id="showEditButton{{.ArticleID}}" class="pure.pure-button" onclick="showEditPane('{{ .ArticleID}}')">編輯</button>
-            <button class="pure.pure-button" onclick="deleteArticle('{{ .ArticleID}}')">刪除</button>
-
-            <!-- 文章的編輯區 -->
+            <!-- 編輯文章區塊 -->
             {{template "articleEdit" .}}
+            <!-- 刪除文章區塊 -->
+            <!-- 點擊顯示刪除dialog按鈕 -->
+            <button class="pure.pure-button" onclick="showDeleteDialog('{{ .ArticleID}}')">刪除</button>
+            <dialog id="deleteDialog{{.ArticleID}}">
+                <form method="dialog">
+                    是否刪除Dialog?
+                    <button onclick="deleteArticle('{{.ArticleID}}')">刪除</button>
+                </form>
+                
+              </dialog>
+              
         {{end}}
 
     </li>
     {{end}}
 </ul>
-<!-- 文章分頁(導向不同分頁的連結) -->
+<!-- 底部文章頁面連結(導向不同頁數1.2.3.4...) -->
 <div id="pageLink" class="pure.pure-menu">
     {{range $page.AnotherPageIndices}}
         <div class="pure.pure-menu-item">

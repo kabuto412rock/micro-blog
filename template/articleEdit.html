@@ -1,4 +1,6 @@
 {{define "articleEdit" }}
+<!-- 顯示隱藏編輯區的按鈕  -->
+<button id="showEditButton{{.ArticleID}}" class="pure.pure-button" onclick="showEditPane('{{ .ArticleID}}')">編輯</button>
 <!-- 文章的編輯區 -->
 <form hidden class="pure.pure-button-hover" action="update?articleID={{.ArticleID}}" method="POST" id="edit{{.ArticleID}}">
     <input name="title" type="text" placeholder="輸入標題" value="{{.Title}}" >
