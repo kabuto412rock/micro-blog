@@ -24,7 +24,7 @@ func (e Env) ArticleEdit(c *gin.Context) {
 	}
 	a := model.Article{Title: title, Content: content, ArticleID: articleID, UserID: userID}
 
-	ok = e.UpdateArticle(a) // ommit the ok
+	ok = e.UpdateArticle(a)
 	if !ok {
 		c.JSON(404, gin.H{
 			"error": "為什麼是卡在這？！",

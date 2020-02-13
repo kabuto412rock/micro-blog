@@ -118,7 +118,8 @@ func (db MyDB) UpdateArticle(a Article) (ok bool) {
 	if err != nil {
 		return false
 	}
-	if rows, err := result.RowsAffected(); err != nil || rows < 1 {
+
+	if _, err := result.RowsAffected(); err != nil {
 		return false
 	}
 	return true

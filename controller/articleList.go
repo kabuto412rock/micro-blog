@@ -21,7 +21,7 @@ func (e *Env) ArticleList(c *gin.Context) {
 	}
 	pageIndex, err := strconv.Atoi(c.Query("pageIndex"))
 	pageSize, err := strconv.Atoi(c.Query("pageSize"))
-	
+
 	// 請求路徑的pageindex和pagesize有誤，幫忙重設定來到第一頁
 	if err != nil || pageIndex <= 0 {
 		pageIndex = 1

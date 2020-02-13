@@ -15,16 +15,17 @@
 <ul>
     {{range $articles}}                 
     
-    <li><div>標題:{{.Title}}</div>
-        {{if .Username }}
-        <div>作者:{{.Username}}</div>
-        {{ else}}
-        <div> <strike>作者已被刪除</strike></div>
-        {{end}}
-        <div>時間:{{.EditTime}}</div>
-        <p class="pure.pure-form-stacked">
-            {{ .Content}}
-        </p>
+    <li>
+        <form id="article{{.ArticleID}}" class="pure-form-stacked">
+            <div>標題:{{.Title}}</div>
+            {{if .Username }}
+            <div>作者:{{.Username}}</div>
+            {{ else}}
+            <div> <strike>作者已被刪除</strike></div>
+            {{end}}
+            <div>時間:{{.EditTime}}</div>
+            <textarea disabled name="content" cols="30" rows="3" placeholder="寫點什麼吧~">{{.Content}}</textarea>
+        </form>
         
         {{if eq .UserID $currentUserID}}
             <!-- 編輯articleID文章區塊 -->

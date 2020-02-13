@@ -1,9 +1,10 @@
 {{define "articleDelete" }}
-<button class="pure.pure-button" onclick="showDeleteDialog('{{ .ArticleID}}')">刪除</button>
+<button id="deleteArticle{{.ArticleID}}" class="pure-button button-error" onclick="showDeleteDialog('{{ .ArticleID}}')">刪除</button>
 <dialog id="deleteDialog{{.ArticleID}}">
     <form method="dialog">
         <p>是否刪除Dialog?</p>
-        <button onclick="deleteArticle('{{.ArticleID}}')">刪除</button>
+        <button class="pure-button-active button-error" onclick="deleteArticle('{{.ArticleID}}');return false;">刪除</button>
+        <button class="pure-button-active">取消</button>
     </form>                
 </dialog>
 

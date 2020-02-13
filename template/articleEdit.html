@@ -1,10 +1,15 @@
 {{define "articleEdit" }}
 <!-- 顯示隱藏編輯區的按鈕  -->
-<button id="showEditButton{{.ArticleID}}" class="pure.pure-button" onclick="showEditPane('{{ .ArticleID}}')">編輯</button>
+<button id="showEditButton{{.ArticleID}}" class="pure-button button-success" onclick="showEditPane('{{ .ArticleID}}')">編輯</button>
 <!-- 文章的編輯區 -->
-<form hidden class="pure.pure-button-hover" action="update?articleID={{.ArticleID}}" method="POST" id="edit{{.ArticleID}}">
+
+<form hidden class="pure-form-stacked" action="update?articleID={{.ArticleID}}" method="POST" id="edit{{.ArticleID}}">
+    <div>標題</div>
     <input name="title" type="text" placeholder="輸入標題" value="{{.Title}}" >
-    <input name="content" type="text" placeholder="寫點什麼吧~" value="{{.Content}}">
+    <div>內容</div>
+    <textarea name="content" cols="30" placeholder="寫點什麼吧~">{{.Content}}</textarea>
     <input class="pure-button" type="submit" value="儲存">
+    <button class="pure-button" onclick="showEditPane('{{ .ArticleID}}');return false;">取消</button>
 </form>
+
 {{end}}
