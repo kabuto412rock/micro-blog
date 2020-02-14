@@ -2,7 +2,7 @@
 <!-- 點擊顯示新文章區塊的按鈕 -->
 <button id="showCreatePaneButton" class="pure-button-active" onclick="showCreatePane()">新文章</button>
 <!-- 新文章的編輯區塊 -->
-<form class="pure-form-stacked" hidden action="create/" method="POST" id="createArticlePane">
+<form class="pure-form-stacked myForm" hidden action="create/" method="POST" id="createArticlePane">
     <input name="title" type="text" placeholder="輸入標題">
     <textarea name="content" rows="10" cols="30" placeholder="寫點什麼吧~">{{.Content}}</textarea>
     <input class="pure-button pure-button-primary" type="submit" value="建立">

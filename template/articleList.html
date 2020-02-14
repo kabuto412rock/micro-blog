@@ -8,23 +8,27 @@
 {{$page := .page}}
 {{$articles := $page.Articles}}
 
-<div class="pure-group">
-    <!-- 編輯新文章區塊 -->
-    {{template "articleCreate"}}    
-</div>
-<ul>
+
+<!-- 編輯新文章區塊 -->
+{{template "articleCreate"}}    
+
+<ul >
     {{range $articles}}                 
     
     <li>
-        <form id="article{{.ArticleID}}" class="pure-form-stacked">
-            <div>標題:{{.Title}}</div>
-            {{if .Username }}
-            <div>作者:{{.Username}}</div>
-            {{ else}}
-            <div> <strike>作者已被刪除</strike></div>
-            {{end}}
-            <div>時間:{{.EditTime}}</div>
-            <textarea disabled name="content" cols="30" rows="3" placeholder="寫點什麼吧~">{{.Content}}</textarea>
+        <form id="article{{.ArticleID}}" class="pure-form myForm" style="background-color: white;max-width: 80%;">
+
+            <div class="">標題:<span>{{.Title}}</span></div>
+            <div class="">
+                作者
+                {{if .Username }} 
+                {{.Username}}
+                {{ else}}
+                <span><strike>作者已被刪除</strike> </span>
+                {{end}}
+            </div>
+            <div class="">時間<span>{{.EditTime}}</span></div>
+            <textarea style="color: aliceblue; background-color: black;" disabled name="content" cols="30" rows="3" placeholder="寫點什麼吧~">{{.Content}}</textarea>
         </form>
         
         {{if eq .UserID $currentUserID}}
