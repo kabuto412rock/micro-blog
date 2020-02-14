@@ -20,8 +20,12 @@
  ```bash
  $ git clone https://github.com/kabuto412rock/micro-blog.git
  ```
-
-2. 修改controller/env.go內的DB常數(DBuser...)，主要修改DBUser、DBPassword、DBName
+2. 啟動你自己的MySQL Server
+```bash
+# 因人而異，我是用homebrew安裝mysql server
+$ mysql.server start
+``` 
+3. 修改controller/env.go內的DB常數(DBuser...)，主要修改DBUser、DBPassword、DBName
 ```c
 const (
 	UserKey     = "user_id"   // Key for Session & Cookie
@@ -34,7 +38,8 @@ const (
 	DBport      = "3306"       // MySQL port
 )
 ```
-3. 新建MySQL資料表 
+
+4. 新建MySQL資料表 
 ##### Article資料表
 ```sql
 CREATE TABLE `Article` (
@@ -56,7 +61,10 @@ CREATE TABLE `User` (
   PRIMARY KEY (`userID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 ```
-4. 啟動Golang Server
+5. 啟動Golang Server
 ```bash
 $ go run main.go
 ```
+
+## 介面說明
+
