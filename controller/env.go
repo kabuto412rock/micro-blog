@@ -17,12 +17,23 @@ type Env struct {
 }
 
 const (
-	UserKey     = "user_id"
-	UserNameKey = "user_name"
+	UserKey     = "user_id"    // Key for Session & Cookie
+	UserNameKey = "user_name"  // Key for Cookie
+	DBUser      = "dbuser"     // MySQL's User name
+	DBPassword  = "Ej3yj/ru8@" // MySQL's User password
+	DBName      = "UserDB"     // MySQL's DB Name
+	DBLocalhost = "127.0.0.1"  // MySQL Server's IP Address
+	DBport      = "3306"       // MySQL port
 )
 
 func NewEnv(salt []byte) *Env {
-	mydb, err := model.New()
+	mydb, err := model.New(
+		DBUser,
+		DBPassword,
+		DBLocalhost,
+		DBport,
+		DBName,
+	)
 	if err != nil {
 		log.Fatal("mydb's error:", err)
 	}

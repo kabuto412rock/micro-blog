@@ -13,13 +13,14 @@ type MyDB struct {
 }
 
 /*New 產生一個DB實例*/
-func New() (*MyDB, error) {
-	user := "dbuser"         // 帳號
-	password := "Ej3yj/ru8@" // 密碼
-	dbName := "UserDB"       // db名稱
+func New(dbUser, dbPassword, dbLocalhost, dbPort, dbName string) (*MyDB, error) {
 
 	// 連接本地的MySQL資料庫
-	db, err := connectMysql(user, password, dbName)
+	db, err := connectMysql(dbUser,
+		dbPassword,
+		dbLocalhost,
+		dbPort,
+		dbName)
 
 	return &MyDB{db}, err
 }
@@ -30,8 +31,13 @@ func (mydb MyDB) Close() error {
 }
 
 // 連接到本地端名為dbName的資料庫
-func connectMysql(userName, userPassword, dbName string) (*sql.DB, error) {
-	dataSourceName := fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/%s?parseTime=true", userName, userPassword, dbName)
+func connectMysql(userName, userPassword, dbLocalhost, port, dbName string) (*sql.DB, error) {
+	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
+		userName,
+		userPassword,
+		dbLocalhost,
+		port,
+		dbName)
 
 	return sql.Open("mysql", dataSourceName)
 }
