@@ -2,7 +2,6 @@ package controller
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -25,15 +24,17 @@ func (e *Env) Login(c *gin.Context) {
 			})
 			return
 		}
-		cookie := http.Cookie{
-			Name:    UserNameKey,
-			Value:   username,
-			Expires: time.Now().AddDate(0, 2, 1),
-		}
-		http.SetCookie(c.Writer, &cookie)
+		// cookie := http.Cookie{
+		// 	Name:    UserNameKey,
+		// 	Value:   username,
+		// 	Expires: time.Now().AddDate(0, 2, 1),
+		// }
+
+		// http.SetCookie(c.Writer, &cookie)
+		c.SetCookie(UserNameKey, username, 36000, "/", Domain, false, true)
 		c.Redirect(http.StatusFound, "list")
 
-		// c.Abort()
+		c.Abort()
 		return
 	}
 	// 登入失敗

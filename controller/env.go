@@ -19,6 +19,7 @@ type Env struct {
 const (
 	UserKey     = "user_id"   // Key for Session & Cookie
 	UserNameKey = "user_name" // Key for Cookie
+	Domain      = "localhost" // WEB Server's domain
 	// 底下的常數自行調整。
 	DBUser      = "dbuser"     // MySQL's User name
 	DBPassword  = "Ej3yj/ru8@" // MySQL's User password
