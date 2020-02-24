@@ -18,17 +18,19 @@
     <li>
         <form id="article{{.ArticleID}}" class="pure-form myForm" style="background-color: white;max-width: 80%;">
 
-            <div class="">標題:<span>{{.Title}}</span></div>
-            <div class="">
+            <div style="background-color: lawngreen;">標題 <span style="background-color: white;">{{.Title}}</span></div>
+            <div style="background-color:teal; color: white;">
                 作者
+                <span>
                 {{if .Username }} 
                 {{.Username}}
                 {{ else}}
-                <span><strike>作者已被刪除</strike> </span>
+                <strike style="background-color:lightcoral;">作者已被刪除</strike>
                 {{end}}
+                </span>
             </div>
             <div class="">時間<span>{{.EditTime}}</span></div>
-            <textarea style="color: aliceblue; background-color: black;" disabled name="content" cols="30" rows="3" placeholder="寫點什麼吧~">{{.Content}}</textarea>
+            <textarea style="color: aliceblue; background-color: black;max-width: 100%; width: 100%;" disabled name="content" cols="30" rows="3" placeholder="寫點什麼吧~">{{.Content}}</textarea>
         </form>
         
         {{if eq .UserID $currentUserID}}
@@ -39,6 +41,7 @@
         {{end}}
 
     </li>
+    <br>
     {{end}}
 </ul>
 <!-- 底部文章頁面連結(導向不同頁數1.2.3.4...) -->

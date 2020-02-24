@@ -4,10 +4,11 @@
 <!-- 文章的編輯區 -->
 
 <form hidden class="pure-form-stacked myForm" action="update?articleID={{.ArticleID}}" method="POST" id="edit{{.ArticleID}}">
-    <div>標題</div>
+    <div >標題</div>
     <input name="title" type="text" placeholder="輸入標題" value="{{.Title}}" >
     <div>內容</div>
-    <textarea name="content" cols="30" placeholder="寫點什麼吧~">{{.Content}}</textarea>
+    <textarea name="content" cols="30" placeholder="寫點什麼吧~" style="max-width: 80%;width: 80%;">{{.Content}}</textarea>
+
     <input class="pure-button" type="submit" value="儲存">
     <button class="pure-button" onclick="showEditPane('{{ .ArticleID}}');return false;">取消</button>
 </form>
