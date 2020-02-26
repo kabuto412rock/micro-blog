@@ -25,20 +25,21 @@
 # 因人而異，我是用homebrew安裝mysql server
 $ mysql.server start
 ``` 
-3. 修改controller/env.go內的DB常數(DBuser...)，主要修改DBUser、DBPassword、DBName
-```c
-const (
-	UserKey     = "user_id"   // Key for Session & Cookie
-	UserNameKey = "user_name" // Key for Cookie
-	// 底下的DB常數請依個人情況自行調整。
-	DBUser      = "dbuser"     // MySQL's User name
-	DBPassword  = "Ej3yj/ru8@" // MySQL's User password
-	DBName      = "UserDB"     // MySQL's DB Name
-	DBLocalhost = "127.0.0.1"  // MySQL Server's IP Address
-	DBport      = "3306"       // MySQL port
-)
-```
+3. 欲修改Server和DB的設定，請查看config.yaml
+```yaml
+# Server configuations
+server:
+  host: "localhost" 
+  port: 8080
 
+# MySQL Database configuations
+database:
+  user: "dbuser" # DB User name
+  pass: "Ej3yj/ru8@" # DB User password
+  dbname: "UserDB" # DB name
+  host: "127.0.0.1" # DB Server's host 
+  port: 3306 # DB Server's port
+```
 4. 新建MySQL資料表 
 ##### Article資料表
 ```sql
@@ -67,4 +68,3 @@ $ go run main.go
 ```
 
 ## 介面說明
-

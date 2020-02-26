@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	cfg "github.com/kabuto412rock/microblog/config"
 	"github.com/kabuto412rock/microblog/model"
 )
 
@@ -20,26 +21,15 @@ const (
 	UserKey     = "user_id"   // Key for Session & Cookie
 	UserNameKey = "user_name" // Key for Cookie
 	Domain      = "localhost" // WEB Server's domain
-	// 底下的常數自行調整。
-	DBUser      = "dbuser"     // MySQL's User name
-	DBPassword  = "Ej3yj/ru8@" // MySQL's User password
-	DBName      = "UserDB"     // MySQL's DB Name
-	DBLocalhost = "127.0.0.1"  // MySQL Server's IP Address
-	DBport      = "3306"       // MySQL port
 )
 
-func NewEnv(salt []byte) *Env {
-	mydb, err := model.New(
-		DBUser,
-		DBPassword,
-		DBLocalhost,
-		DBport,
-		DBName,
-	)
+func NewEnv(config *cfg.Config) *Env {
+	mydb, err := model.New(config)
 	if err != nil {
 		log.Fatal("mydb's error:", err)
 	}
 
+	salt := []byte("我是鹽值@w@，用來讓加密更安全Bj4")
 	env := &Env{MyDB: mydb, salt: salt}
 	return env
 }

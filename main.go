@@ -6,6 +6,7 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	"github.com/kabuto412rock/microblog/config"
 	"github.com/kabuto412rock/microblog/controller"
 )
 
@@ -20,7 +21,10 @@ func main() {
 }
 
 func engine() *gin.Engine {
-	env := controller.NewEnv([]byte("我是鹽值@w@，用來讓加密更安全Bj4"))
+	// 讀取config.yaml的設定
+	myConfig := config.ReadConfig()
+	
+	env := controller.NewEnv(myConfig)
 
 	r := gin.New()
 	r.LoadHTMLGlob("template/*")
