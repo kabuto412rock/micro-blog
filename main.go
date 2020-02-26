@@ -1,30 +1,37 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
-	"github.com/kabuto412rock/microblog/config"
+	cfg "github.com/kabuto412rock/microblog/config"
 	"github.com/kabuto412rock/microblog/controller"
 )
 
 func main() {
-	// 建立一個新Http服務 r
-	r := engine()
+	// 讀取config.yaml的設定
+	myConfig := cfg.ReadConfig()
 
-	// r 開始在本地服務Port: 8080
-	if err := r.Run("127.0.0.1:8080"); err != nil {
+	// 建立一個新Http服務
+	r := engine(myConfig)
+
+	// 使用myConfig產生host string
+	host := fmt.Sprintf("%s:%s",
+		myConfig.Server.Host,
+		myConfig.Server.Port)
+
+	// r 開始執行Web服務
+	if err := r.Run(host); err != nil {
 		log.Fatal("r.Run's error:", err)
 	}
 }
 
-func engine() *gin.Engine {
-	// 讀取config.yaml的設定
-	myConfig := config.ReadConfig()
-	
-	env := controller.NewEnv(myConfig)
+func engine(config *cfg.Config) *gin.Engine {
+
+	env := controller.NewEnv(config)
 
 	r := gin.New()
 	r.LoadHTMLGlob("template/*")

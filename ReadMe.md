@@ -19,6 +19,7 @@
 1. 將專案複製到電腦中
  ```bash
  $ git clone https://github.com/kabuto412rock/micro-blog.git
+ $ cd micro-blog 
  ```
 2. 啟動你自己的MySQL Server
 ```bash
