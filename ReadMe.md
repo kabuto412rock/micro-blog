@@ -18,21 +18,22 @@
 
 ## 如何啟動
 
-1. 將專案複製到電腦中
+### 1. 將專案複製到電腦中
  ```bash
  $ git clone https://github.com/kabuto412rock/micro-blog.git
  $ cd micro-blog 
  ```
 
-2. 啟動你自己的MySQL Server
+### 2. 啟動你自己的MySQL Server
 
 ```bash
 # 因人而異，我是用homebrew安裝mysql server
 $ mysql.server start
 ``` 
-3. 欲修改Server和DB的設定，請查看[config.yaml](./config.yaml)
-4. 新建MySQL資料表
-##### Article資料表
+### 3. 欲修改Server和DB的設定，請查看[config.yaml](./config.yaml)
+
+### 4. 新建MySQL資料表
+#### Article資料表
 
 ```sql
 CREATE TABLE `Article` (
@@ -44,7 +45,7 @@ CREATE TABLE `Article` (
   PRIMARY KEY (`articleID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 ```
-##### User資料表
+#### User資料表
 ```sql
 CREATE TABLE `User` (
   `userID` varchar(30) NOT NULL DEFAULT '',
@@ -54,7 +55,7 @@ CREATE TABLE `User` (
   PRIMARY KEY (`userID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 ```
-5. 啟動Golang Server
+### 5. 啟動Golang Server
 ```bash
 $ go run main.go
 ```
