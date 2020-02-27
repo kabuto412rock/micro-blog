@@ -22,8 +22,10 @@ function showEditPane(paneID) {
 // 直接發送一個刪除文章的POST請求，「刪除對應articleID的文章」
 function deleteArticle(articleID) {
   var form = document.createElement('form');
-  form.setAttribute('method', 'post');
-  form.setAttribute('action', '/delete?articleID='+articleID);
+  form.method ='POST';
+  form.action ='/delete?articleID='+articleID;
+  var csrfInput = document.getElementsByName("_csrf")[0].cloneNode()
+  form.appendChild(csrfInput)
   form.style.display = 'hidden';
   document.body.appendChild(form)
   form.submit();

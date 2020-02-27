@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	csrf "github.com/utrack/gin-csrf"
 )
 
 func (e *Env) ArticleList(c *gin.Context) {
@@ -38,8 +39,9 @@ func (e *Env) ArticleList(c *gin.Context) {
 		return
 	}
 	c.HTML(200, "articleList.html", gin.H{
-		"username": username,
-		"userID":   userID,
-		"page":     page,
+		"username":  username,
+		"userID":    userID,
+		"page":      page,
+		"csrfToken": csrf.GetToken(c),
 	})
 }

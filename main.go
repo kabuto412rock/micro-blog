@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 
+	csrf "github.com/utrack/gin-csrf"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
@@ -40,6 +42,16 @@ func engine(config *cfg.Config) *gin.Engine {
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("mysession", store))
 
+	// 使用CSRF驗證的中介層
+	r.Use(csrf.Middleware(
+		csrf.Options{
+			ErrorFunc: func(c *gin.Context) {
+				c.String(400, "CSRF token mismatch")
+				c.Abort()
+			},
+			Secret: "🍠D倪iJI98LMㄕhㄠ匡a@o!iz🐭",
+		},
+	))
 	/* 無需驗證的路由 */
 	// 起始頁面(即登入頁面)
 	r.GET("/", env.Index)

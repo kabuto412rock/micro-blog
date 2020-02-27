@@ -10,7 +10,10 @@
         <title>{{.title}}</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="X-CSRF-TOKEN" content={{.csrfToken}}>
+ 
         <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
+        
         <link rel="stylesheet" href="css/general.css">
     </head>
     <body class="container" background="/img/gopher3.jpg">
@@ -24,6 +27,8 @@
                 <a style="display: inline;"class="pure-button button-secondary" href="/logout">登出</a>
             </div>
             {{ end }}
+            <script defer src="js/csrfIsGreat.js"></script>
+
         <div class="content">
             
     
