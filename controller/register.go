@@ -3,12 +3,16 @@ package controller
 import (
 	"net/http"
 
+	csrf "github.com/utrack/gin-csrf"
+
 	"github.com/gin-gonic/gin"
 )
 
 // RegisterGET 返回一個註冊頁面
 func (e Env) RegisterGET(c *gin.Context) {
-	c.HTML(200, "register.html", nil)
+	c.HTML(200, "register.html", gin.H{
+		"csrfToken": csrf.GetToken(c),
+	})
 }
 
 // RegisterPOST 處理由reigster.html發送的POST註冊請求
