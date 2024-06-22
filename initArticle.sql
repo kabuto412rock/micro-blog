@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS `Article` (
+  `articleID` int NOT NULL AUTO_INCREMENT,
+  `userID` varchar(30) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `content` varchar(255) DEFAULT NULL,
+  `editTime` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`articleID`)
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

@@ -6,7 +6,7 @@ server:
 # MySQL Database configuations
 database:
   user: "dbuser" # DB User name
-  pass: "Ej3yj/ru8@" # DB User password
+  pass: "8*S+0nCxS9/ngYjczCaq" # DB User password
   dbname: "UserDB" # DB name
-  host: "127.0.0.1" # DB Server's host 
+  host: "db" # DB Server's host 
   port: 3306 # DB Server's port

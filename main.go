@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	csrf "github.com/utrack/gin-csrf"
 
@@ -32,9 +33,20 @@ func main() {
 }
 
 func engine(config *cfg.Config) *gin.Engine {
-
 	env := controller.NewEnv(config)
-
+	// 建立資料表
+	sqlNames := []string{"initUser.sql", "initArticle.sql"}
+	for _, fileName := range sqlNames {
+		fileContent, err := os.ReadFile(fileName)
+		if err != nil {
+			log.Fatalf("無法讀取%s, err: %v", fileName, err)
+		}
+		initSQL := string(fileContent)
+		_, err = env.DB.Exec(initSQL)
+		if err != nil {
+			log.Fatalf("無法讀取%s執行建立資料表出現錯誤, err: %v", fileName, err)
+		}
+	}
 	r := gin.New()
 	r.LoadHTMLGlob("template/*")
 
