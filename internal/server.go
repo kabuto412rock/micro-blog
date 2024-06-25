@@ -1,39 +1,24 @@
-package main
+package internal
 
 import (
 	"fmt"
 	"log"
 	"os"
 
-	csrf "github.com/utrack/gin-csrf"
-
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
-	cfg "github.com/kabuto412rock/microblog/config"
+	"github.com/kabuto412rock/microblog/config"
 	"github.com/kabuto412rock/microblog/controller"
+	csrf "github.com/utrack/gin-csrf"
 )
 
-func main() {
-	// 讀取config.yaml的設定
-	myConfig := cfg.ReadConfig()
-
-	// 建立一個新Http服務
-	r := engine(myConfig)
-
-	// 使用myConfig產生host string
-	host := fmt.Sprintf("%s:%s",
-		myConfig.Server.Host,
-		myConfig.Server.Port)
-
-	// r 開始執行Web服務
-	if err := r.Run(host); err != nil {
-		log.Fatal("r.Run's error:", err)
-	}
+type Server struct {
+	config *config.Config
+	engine *gin.Engine
 }
 
-func engine(config *cfg.Config) *gin.Engine {
-	env := controller.NewEnv(config)
+func NewServer(config *config.Config, env *controller.Env) *Server {
 	// 建立資料表
 	sqlNames := []string{"initUser.sql", "initArticle.sql"}
 	for _, fileName := range sqlNames {
@@ -94,5 +79,20 @@ func engine(config *cfg.Config) *gin.Engine {
 
 	// 更新文章
 	r.POST("update", env.ArticleEdit)
-	return r
+	return &Server{
+		config: config,
+		engine: r,
+	}
+}
+
+func (s *Server) Run() {
+	// 使用config產生host string
+	host := fmt.Sprintf("%s:%s",
+		s.config.Server.Host,
+		s.config.Server.Port)
+
+	// r 開始執行Web服務
+	if err := s.engine.Run(host); err != nil {
+		log.Fatal("Server Running Error:", err)
+	}
 }

@@ -1,2 +1,8 @@
 # 忽略__debug_bin
 __debug_bin
+
+# 忽略go build出來的執行檔
+micro-blog
+
+# 不要忽略cmd底下的資料夾
+!cmd/*

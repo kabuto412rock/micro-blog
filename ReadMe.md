@@ -28,7 +28,8 @@
 2. 上述內容成功後進到容器，執行以下指令
     ```bash
     cd micro-blog  # 進到專案資料夾
-    go run main.go # 啟動Server:8080
+    go build ./cmd/micro-blog # 將程式碼編譯成執行檔
+    ./micro-blog # 啟動Server:8080
     ```
 > 欲修改Server和DB的設定，請查看[config.yaml](./config.yaml)  
 > 已改為使用VSCode的 devcontainer容器啟動
