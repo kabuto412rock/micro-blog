@@ -8,8 +8,8 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
-	"github.com/kabuto412rock/microblog/config"
-	"github.com/kabuto412rock/microblog/controller"
+	"github.com/kabuto412rock/microblog/internal/config"
+	"github.com/kabuto412rock/microblog/internal/controller"
 	csrf "github.com/utrack/gin-csrf"
 )
 
@@ -33,7 +33,7 @@ func NewServer(config *config.Config, env *controller.Env) *Server {
 		}
 	}
 	r := gin.New()
-	r.LoadHTMLGlob("template/*")
+	r.LoadHTMLGlob("internal/template/*")
 
 	// 使用紀錄CookieSession的中介層
 	store := cookie.NewStore([]byte("secret"))

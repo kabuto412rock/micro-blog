@@ -1,4 +1,6 @@
 .PHONY: local
+wire:
+	wire gen ./...
 
 local:
-	go build -o bin/micro-blog ./cmd/micro-blog && ./bin/micro-blog
+	make wire && go build -o bin/micro-blog ./cmd/micro-blog && ./bin/micro-blog

@@ -7,9 +7,9 @@
 package main
 
 import (
-	"github.com/kabuto412rock/microblog/config"
-	"github.com/kabuto412rock/microblog/controller"
 	"github.com/kabuto412rock/microblog/internal"
+	"github.com/kabuto412rock/microblog/internal/config"
+	"github.com/kabuto412rock/microblog/internal/controller"
 )
 
 // Injectors from wire.go:

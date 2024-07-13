@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	cfg "github.com/kabuto412rock/microblog/config"
+	cfg "github.com/kabuto412rock/microblog/internal/config"
 
 	// Mysql的Driver
 	_ "github.com/go-sql-driver/mysql"

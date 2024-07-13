@@ -8,8 +8,8 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	cfg "github.com/kabuto412rock/microblog/config"
-	"github.com/kabuto412rock/microblog/model"
+	cfg "github.com/kabuto412rock/microblog/internal/config"
+	"github.com/kabuto412rock/microblog/internal/model"
 )
 
 type Env struct {

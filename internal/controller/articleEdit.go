@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/kabuto412rock/microblog/model"
+	"github.com/kabuto412rock/microblog/internal/model"
 )
 
 func (e Env) ArticleEdit(c *gin.Context) {

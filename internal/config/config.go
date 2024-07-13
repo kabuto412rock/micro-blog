@@ -23,7 +23,7 @@ type Config struct {
 }
 
 func ReadConfig() *Config {
-	f, err := os.Open("config.yaml")
+	f, err := os.Open("./config.yaml")
 	if err != nil {
 		log.Fatal("Can't read your config.yaml, err=", err)
 	}
