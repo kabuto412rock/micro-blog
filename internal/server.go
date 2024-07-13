@@ -3,7 +3,6 @@ package internal
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -19,19 +18,6 @@ type Server struct {
 }
 
 func NewServer(config *config.Config, env *controller.Env) *Server {
-	// 建立資料表
-	sqlNames := []string{"initUser.sql", "initArticle.sql"}
-	for _, fileName := range sqlNames {
-		fileContent, err := os.ReadFile(fileName)
-		if err != nil {
-			log.Fatalf("無法讀取%s, err: %v", fileName, err)
-		}
-		initSQL := string(fileContent)
-		_, err = env.DB.Exec(initSQL)
-		if err != nil {
-			log.Fatalf("無法讀取%s執行建立資料表出現錯誤, err: %v", fileName, err)
-		}
-	}
 	r := gin.New()
 	r.LoadHTMLGlob("internal/template/*")
 
@@ -55,9 +41,9 @@ func NewServer(config *config.Config, env *controller.Env) *Server {
 	// 登入請求
 	r.POST("login", env.Login)
 
-	r.Static("/js/", "static/js/")
-	r.Static("/css/", "static/css/")
-	r.Static("/img/", "static/img/")
+	r.Static("/js/", "internal/static/js/")
+	r.Static("/css/", "internal/static/css/")
+	r.Static("/img/", "internal/static/img/")
 	// 註冊請求 Get->回報頁面, Post->
 	r.GET("register", env.RegisterGET)
 	r.POST("register", env.RegisterPOST)

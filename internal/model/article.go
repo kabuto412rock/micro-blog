@@ -1,28 +1,39 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 type ArticlePage struct {
-	Articles           []Article
+	Articles           []ArticleResult
 	CurrentIndex       int
 	AnotherPageIndices []int
 	PageSize           int
 }
 
-/*Article 資料表是MySQL資料庫UserDB中的資料表，
-儲存使用者撰寫的文章*/
+/*
+Article 資料表是MySQL資料庫UserDB中的資料表，
+儲存使用者撰寫的文章
+*/
 type Article struct {
-	ArticleID int
-	UserID    string
+	ArticleID int    `gorm:"primaryKey"`
+	UserID    string `gorm:"type:varchar(255);index"`
 	Title     string
 	Content   string
 	EditTime  time.Time
-	Username  *string
+}
+type ArticleResult struct {
+	ArticleID int       `gorm:"article_id"`
+	UserID    string    `gorm:"user_id"`
+	Title     string    `gorm:"title"`
+	Content   string    `gorm:"content"`
+	EditTime  time.Time `gorm:"edit_time"`
+	UserName  string    `gorm:"user_name"`
 }
 
-func (db MyDB) GetArticlesCount() (count int, ok bool) {
-	row := db.QueryRow("SELECT COUNT(*) FROM Article")
-	if err := row.Scan(&count); err != nil {
+func (db MyDB) GetArticlesCount() (count int64, ok bool) {
+	result := db.Model(&Article{}).Count(&count)
+	if result.Error != nil {
 		return count, false
 	}
 	return count, true
@@ -37,31 +48,23 @@ func (db MyDB) GetArticlePageByIndex(currentPageIndex int, onePageSize int) (pag
 	}
 	// ex: onePageSize = 5, currentPageIndex
 	indexStart := (currentPageIndex - 1) * onePageSize
-	rows, err := db.Query(
-		`SELECT Article.articleID, Article.userID, Article.title, Article.content, Article.editTime, User.name
-		FROM Article
-		LEFT JOIN User ON Article.userID=User.userID
-		ORDER BY Article.editTime DESC LIMIT ? OFFSET ?;`,
-		onePageSize, indexStart)
-	var articles []Article
+	var articles []ArticleResult
+
+	// 執行查詢
+	err := db.Model(&Article{}).
+		Select("articles.article_id, articles.user_id, articles.title, articles.content, articles.edit_time, users.name as user_name").
+		Joins("left join users on articles.user_id = users.user_id").
+		Order("articles.edit_time desc").
+		Limit(onePageSize).
+		Offset(indexStart).
+		Scan(&articles).Error
 	if err != nil {
 		return nil, false
 	}
-	var articleCount int = 0
-	var a Article
-	// 依序取得Article放入articles並計數有幾篇(articleCount)文章
-	for rows.Next() {
-		err := rows.Scan(&a.ArticleID, &a.UserID, &a.Title, &a.Content, &a.EditTime, &a.Username)
-		if err != nil {
-			return nil, false
-		}
-		articles = append(articles, a)
-		articleCount++
-	}
 	// 取得資料庫中Article的數量並計算總共會產生幾個頁面
-	allArticleCount, ok := db.GetArticlesCount()
-	allPageCount := allArticleCount / onePageSize
-	if allArticleCount%onePageSize != 0 {
+	allArticleCount, _ := db.GetArticlesCount()
+	allPageCount := int(allArticleCount) / onePageSize
+	if int(allArticleCount)%onePageSize != 0 {
 		allPageCount++
 	}
 	// 產生ArticlePage底部文章列表的連結索引值
@@ -93,15 +96,14 @@ func (db MyDB) GetArticlePageByIndex(currentPageIndex int, onePageSize int) (pag
 
 /*插入(新增)一個Article*/
 func (db MyDB) InsertArticle(a Article) (ok bool) {
-	result, err := db.Exec(`
-	INSERT INTO Article(userID, title, content, editTime)
-	Values(?, ?, ?, Now())
-	`, a.UserID, a.Title, a.Content)
-	if err != nil {
-		return false
+	article := &Article{
+		UserID:   a.UserID,
+		Title:    a.Title,
+		Content:  a.Content,
+		EditTime: time.Now(),
 	}
-
-	if rows, err := result.RowsAffected(); err != nil || rows < 1 {
+	result := db.Create(article)
+	if result.Error != nil || result.RowsAffected < 1 {
 		return false
 	}
 	return true
@@ -109,17 +111,15 @@ func (db MyDB) InsertArticle(a Article) (ok bool) {
 
 // 更新一個Article
 func (db MyDB) UpdateArticle(a Article) (ok bool) {
-	result, err := db.Exec(`
-	UPDATE Article
-	SET title=?, content=?
-	WHERE articleID=? and userID=?
-	`, a.Title, a.Content, a.ArticleID, a.UserID)
-
-	if err != nil {
-		return false
+	article := &Article{
+		Title:    a.Title,
+		Content:  a.Content,
+		EditTime: time.Now(),
 	}
-
-	if _, err := result.RowsAffected(); err != nil {
+	result := db.Model(&Article{}).
+		Where("article_id = ? AND user_id = ?", a.ArticleID, a.UserID).
+		Updates(article)
+	if result.Error != nil || result.RowsAffected < 1 {
 		return false
 	}
 	return true
@@ -127,12 +127,16 @@ func (db MyDB) UpdateArticle(a Article) (ok bool) {
 
 // 刪除一個Article
 func (db MyDB) DeleteArticle(articleID int, userID string) (ok bool) {
-	result, err := db.Exec(
-		`DELETE FROM Article WHERE articleID=? AND userID = ?`, articleID, userID)
-	if err != nil {
-		return false
-	}
-	if rows, err := result.RowsAffected(); err != nil || rows < 1 {
+	result := db.Where("article_id = ? AND user_id = ?", articleID, userID).Delete(&Article{})
+	// result, err := db.Exec(
+	// 	`DELETE FROM Article WHERE articleID=? AND userID = ?`, articleID, userID)
+	// if err != nil {
+	// 	return false
+	// }
+	// if rows, err := result.RowsAffected(); err != nil || rows < 1 {
+	// 	return false
+	// }
+	if result.Error != nil || result.RowsAffected < 1 {
 		return false
 	}
 	return true

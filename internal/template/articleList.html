@@ -10,11 +10,11 @@
 
 
 <!-- 編輯新文章區塊 -->
-{{template "articleCreate"}}    
+{{template "articleCreate"}}
 
-<ul >
-    {{range $articles}}                 
-    
+<ul>
+    {{range $articles}}
+
     <li>
         <form id="article{{.ArticleID}}" class="pure-form myForm" style="background-color: white;max-width: 80%;">
 
@@ -22,22 +22,23 @@
             <div style="background-color:teal; color: white;">
                 作者
                 <span>
-                {{if .Username }} 
-                {{.Username}}
-                {{ else}}
-                <strike style="background-color:lightcoral;">作者已被刪除</strike>
-                {{end}}
+                    {{if .UserName }}
+                    {{.UserName}}
+                    {{ else}}
+                    <strike style="background-color:lightcoral;">作者已被刪除</strike>
+                    {{end}}
                 </span>
             </div>
             <div class="">時間<span>{{.EditTime}}</span></div>
-            <textarea style="color: aliceblue; background-color: black;max-width: 100%; width: 100%;" disabled name="content" cols="30" rows="3" placeholder="寫點什麼吧~">{{.Content}}</textarea>
+            <textarea style="color: aliceblue; background-color: black;max-width: 100%; width: 100%;" disabled
+                name="content" cols="30" rows="3" placeholder="寫點什麼吧~">{{.Content}}</textarea>
         </form>
-        
+
         {{if eq .UserID $currentUserID}}
-            <!-- 編輯articleID文章區塊 -->
-            {{template "articleEdit" .}}
-            <!-- 刪除articleID文章區塊 -->
-            {{template "articleDelete" .}}
+        <!-- 編輯articleID文章區塊 -->
+        {{template "articleEdit" .}}
+        <!-- 刪除articleID文章區塊 -->
+        {{template "articleDelete" .}}
         {{end}}
 
     </li>
@@ -47,17 +48,17 @@
 <!-- 底部文章頁面連結(導向不同頁數1.2.3.4...) -->
 <div id="pageLink" class="pure.pure-menu">
     {{range $page.AnotherPageIndices}}
-        <div class="pure.pure-menu-item">
-            {{if ne . $page.CurrentIndex}}
-            <a href="list?pageIndex={{.}}&pageSize={{$page.PageSize}}">{{.}}</a>
-            {{else}}
-            <a>{{.}}</a>
-            {{end}}
-        </div>
+    <div class="pure.pure-menu-item">
+        {{if ne . $page.CurrentIndex}}
+        <a href="list?pageIndex={{.}}&pageSize={{$page.PageSize}}">{{.}}</a>
+        {{else}}
+        <a>{{.}}</a>
+        {{end}}
+    </div>
     {{end}}
 </div>
 <!-- JS -->
-<script defer src="js/articleList.js" ></script>
+<script defer src="js/articleList.js"></script>
 
 <!-- Embed the footer.html here -->
 {{ template "footer.html" .}}

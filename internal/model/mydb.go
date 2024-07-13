@@ -1,17 +1,18 @@
 package model
 
 import (
-	"database/sql"
 	"fmt"
 
 	cfg "github.com/kabuto412rock/microblog/internal/config"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 
 	// Mysql的Driver
 	_ "github.com/go-sql-driver/mysql"
 )
 
 type MyDB struct {
-	*sql.DB
+	*gorm.DB
 }
 
 /*New 產生一個MyDB實例*/
@@ -25,12 +26,12 @@ func New(config *cfg.Config) (*MyDB, error) {
 		dbConfig.DBName)
 
 	// 連接本地的MySQL資料庫
-	db, err := sql.Open("mysql", dataSourceName)
-	// 回傳一個
-	return &MyDB{db}, err
-}
+	db, err := gorm.Open(mysql.Open(dataSourceName), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect database")
+	}
 
-// Close 關閉MyDB內部的*sql.db實例
-func (mydb MyDB) Close() error {
-	return mydb.Close()
+	// Migrate the schema
+	db.AutoMigrate(&Article{}, &User{})
+	return &MyDB{db}, err
 }

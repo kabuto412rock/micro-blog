@@ -1,12 +1,24 @@
 package model
 
-func (db MyDB) GetUserName(userID, password string) (username string, ok bool) {
+type User struct {
+	UserID   string    `gorm:"type:varchar(255);uniqueIndex"`
+	Name     string    `gorm:"type:varchat(255)"`
+	Password string    `gorm:"type:varchar(255)"`
+	Token    string    `gorm:"type:varchar(255)"`
+	Articles []Article `gorm:"foreignKey:UserID;references:UserID"`
+	// `userID` varchar(30) NOT NULL DEFAULT '',
+	// `name` varchar(255) DEFAULT NULL,
+	// `password` varchar(255) DEFAULT NULL,
+	// `token` varchar(255) DEFAULT NULL,
+}
 
-	row := db.QueryRow("SELECT name from User WHERE userID=? AND  password=?", userID, password)
-	if err := row.Scan(&username); err != nil {
-		return username, false
+func (db MyDB) GetUserName(userID, password string) (username string, ok bool) {
+	var user User
+	result := db.Model(user).Where("user_id = ? AND password = ?", userID, password).First(&user)
+	if result.Error != nil {
+		return "", false
 	}
-	return username, true
+	return user.Name, true
 }
 
 func (db MyDB) isUserIDValid(userID string) (ok bool) {
@@ -14,31 +26,28 @@ func (db MyDB) isUserIDValid(userID string) (ok bool) {
 	if len(userID) < 1 {
 		return false
 	}
-	row := db.QueryRow(`
-	SELECT COUNT(*) FROM User WHERE userID=?`, userID)
-	var count int
-	err := row.Scan(&count)
-	if err != nil || count != 0 {
+	var count int64
+	result := db.Model(&User{}).Where("user_id = ?", userID).Count(&count)
+	if result.Error != nil || count != 0 {
 		return false
 	}
 	return true
 
 }
 func (db MyDB) CreateUser(userID, username, encodePassword string) (ok bool) {
-	if ok := db.isUserIDValid(userID); !ok {
-		return false
-	}
 	if len(username) < 1 {
 		return false
 	}
-	result, err := db.Exec(`
-	INSERT INTO User(userID, name, password)
-	Values(?, ?, ?)
-	`, userID, username, encodePassword)
-	if err != nil {
+	if ok := db.isUserIDValid(userID); !ok {
 		return false
 	}
-	if rows, err := result.RowsAffected(); err != nil || rows < 1 {
+	user := User{
+		UserID:   userID,
+		Name:     username,
+		Password: encodePassword,
+	}
+	result := db.Create(&user)
+	if result.Error != nil || result.RowsAffected < 1 {
 		return false
 	}
 	return true
