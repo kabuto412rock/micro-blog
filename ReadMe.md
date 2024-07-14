@@ -28,7 +28,8 @@
 2. 上述內容成功後進到容器，執行以下指令
     ```bash
     cd micro-blog  # 進到專案資料夾
-    make local # 將程式碼編譯成執行檔並執行Server :8080
+    make dev # 將程式碼編譯成執行檔並執行Server :8080，當程式碼變動則重新編藝並執行
+    make build # 單純在bin/編譯成執行檔
     ```
 > 欲修改Server和DB的設定，請查看[config.yaml](./config.yaml)  
 > 已改為使用VSCode的 devcontainer容器啟動
